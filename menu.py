@@ -18,7 +18,7 @@ pygame.display.set_caption("Menu")
 gif = pygame.image.load("Menu/fondoMenu1.gif")
 BACK_GROUND = pygame.transform.scale(gif, (1200, 720))
 
-#Establecemos el temporizador para controlar el gif
+#Reloj
 clock = pygame.time.Clock()
 
 def get_font(size): #Devuelve Press-Start-2P en el tamaño que le indiquemos
@@ -122,6 +122,6 @@ def main_menu(): #VENTANA del menu principal
                     sys.exit()
 
         pygame.display.update()
-        clock.tick(60) #Controlamos el gif
+        clock.tick(60) #60 FPS
 
 main_menu()
