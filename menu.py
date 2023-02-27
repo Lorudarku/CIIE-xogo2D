@@ -39,7 +39,7 @@ def jugar(): #VENTANA de jugar
         VENTANA.blit(PLAY_TEXT, PLAY_RECT) #Ponemos el texto del juego
 
         PLAY_BACK_BUTTON = Button(image=None, pos=(640, 460), text_input="BACK",
-            font=get_font(75), base_color="White", hovering_color="Green") #Boton de volver
+            font=get_font(75), base_color="White", hovering_color="Red") #Boton de volver
 
         PLAY_BACK_BUTTON.change_color(PLAY_MOUSE_POS)
         PLAY_BACK_BUTTON.update(VENTANA)
@@ -68,7 +68,7 @@ def opciones(): #VENTANA de opciones
         VENTANA.blit(OPTIONS_TEXT, OPTIONS_RECT) #Ponemos el texto de las opciones
 
         OPTIONS_BACK_BUTTON = Button(image=None, pos=(640, 460), text_input="BACK",
-            font=get_font(75), base_color="Black", hovering_color="Green") #Boton de volver
+            font=get_font(75), base_color="Black", hovering_color="Red") #Boton de volver
 
         OPTIONS_BACK_BUTTON.change_color(OPTIONS_MOUSE_POS)
         OPTIONS_BACK_BUTTON.update(VENTANA)
@@ -95,12 +95,12 @@ def main_menu(): #VENTANA del menu principal
         MENU_TEXT = get_font(100).render("Menu", True, (255, 255, 255)) #Texto del menu
         MENU_RECT = MENU_TEXT.get_rect(center=(600, 100)) #Rectangulo del texto del menu
 
-        PLAY_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 250), text_input="Jugar",
-            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de jugar
-        OPTIONS_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 400), text_input="Opciones",
-            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de opciones
-        EXIT_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 550), text_input="Salir",
-            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de salir
+        PLAY_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(600, 250), text_input="Jugar",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="Green") #Boton de jugar
+        OPTIONS_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(600, 400), text_input="Opciones",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="Green") #Boton de opciones
+        EXIT_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(600, 550), text_input="Salir",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="Green") #Boton de salir
 
         VENTANA.blit(MENU_TEXT, MENU_RECT) #Ponemos el texto del menu
 
