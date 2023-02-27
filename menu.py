@@ -15,16 +15,14 @@ VENTANA = pygame.display.set_mode((1200, 720))
 pygame.display.set_caption("Menu")
 
 #Cargamos el gif de fondo y lo escalamos a la VENTANA
-gif = pygame.image.load("fondoMenu1.gif")
+gif = pygame.image.load("Menu/fondoMenu1.gif")
 BACK_GROUND = pygame.transform.scale(gif, (1200, 720))
-
 
 #Establecemos el temporizador para controlar el gif
 clock = pygame.time.Clock()
 
-
 def get_font(size): #Devuelve Press-Start-2P en el tamaño que le indiquemos
-    return pygame.font.Font("Press-Start-2P.ttf", size)
+    return pygame.font.Font("Menu/Press-Start-2P.ttf", size)
 
 def jugar(): #VENTANA de jugar
     pygame.display.set_caption("jugar")
@@ -97,12 +95,12 @@ def main_menu(): #VENTANA del menu principal
         MENU_TEXT = get_font(100).render("Menu", True, (255, 255, 255)) #Texto del menu
         MENU_RECT = MENU_TEXT.get_rect(center=(600, 100)) #Rectangulo del texto del menu
 
-        PLAY_BUTTON = Button(image=None, pos=(640, 250), text_input="Jugar",
-            font=get_font(25), base_color="#d7fcd4", hovering_color="White") #Boton de jugar
-        OPTIONS_BUTTON = Button(image=None, pos=(640, 400), text_input="Opciones",
-            font=get_font(25), base_color="#d7fcd4", hovering_color="White") #Boton de opciones
-        EXIT_BUTTON = Button(image=None, pos=(640, 550), text_input="Salir",
-            font=get_font(25), base_color="#d7fcd4", hovering_color="White") #Boton de salir
+        PLAY_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 250), text_input="Jugar",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de jugar
+        OPTIONS_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 400), text_input="Opciones",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de opciones
+        EXIT_BUTTON = Button(image=pygame.image.load("Menu/rectangulo-semitransparente.png"), pos=(640, 550), text_input="Salir",
+            font=get_font(40), base_color="#d7fcd4", hovering_color="White") #Boton de salir
 
         VENTANA.blit(MENU_TEXT, MENU_RECT) #Ponemos el texto del menu
 

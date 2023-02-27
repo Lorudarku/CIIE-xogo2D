@@ -3,18 +3,18 @@ import pygame
 class Button():
     # Inicializa el boton
     def __init__(self, image, pos, text_input, font, base_color, hovering_color):
-        self.image = image
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
-        self.font = font
-        self.base_color = base_color
-        self.hovering_color = hovering_color
-        self.text_input = text_input
-        self.text = self.font.render(self.text_input, True, self.base_color)  
-        if self.image is None:
-            self.image = self.text
-        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        self.image = image #Imagen del boton
+        self.x_pos = pos[0] #Posicion x del boton
+        self.y_pos = pos[1] #Posicion y del boton
+        self.font = font #Fuente del texto del boton
+        self.base_color = base_color #Color base del boton
+        self.hovering_color = hovering_color #Color del boton cuando el raton pasa por encima
+        self.text_input = text_input #Texto del boton
+        self.text = self.font.render(self.text_input, True, self.base_color)  #Texto del boton
+        if self.image is None: #Si no hay imagen, la imagen sera el texto
+            self.image = self.text 
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos)) #Rectangulo del boton
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos)) #Rectangulo del texto del boton
 
     # Cambia el color del boton cuando el raton pasa por encima
     def change_color(self, mouse_pos):
