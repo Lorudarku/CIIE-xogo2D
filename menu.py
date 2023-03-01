@@ -4,6 +4,7 @@
 
 import pygame
 import sys
+import pyganim, PIL
 from button import Button
 from pygame.locals import *
 
@@ -14,11 +15,14 @@ pygame.init()
 VENTANA = pygame.display.set_mode((1200, 720))
 pygame.display.set_caption("Menu")
 
-#Cargamos el gif de fondo y lo escalamos a la VENTANA
-gif = pygame.image.load("Menu/fondoMenu1.gif")
-BACK_GROUND = pygame.transform.scale(gif, (1200, 720))
+#Carga el gif de fondo usando pyganim y lo escalamos a la VENTANA
 
-#Reloj
+
+#Cargamos el gif de fondo y lo escalamos a la VENTANA
+gifMenu = pyganim.PygAnimation('Menu/fondoMenu.gif')
+gifMenu.play()
+
+#reloj
 clock = pygame.time.Clock()
 
 def get_font(size): #Devuelve Press-Start-2P en el tamaño que le indiquemos
@@ -87,8 +91,8 @@ def main_menu(): #VENTANA del menu principal
     pygame.display.set_caption("Menu")
 
     while True:
-        #Ponemos nuestro gif de fondo
-        VENTANA.blit(BACK_GROUND, (0, 0))
+        VENTANA.fill("black")
+        gifMenu.blit(VENTANA, (0, 0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos() #Posicion del raton
 
@@ -122,6 +126,6 @@ def main_menu(): #VENTANA del menu principal
                     sys.exit()
 
         pygame.display.update()
-        clock.tick(60) #60 FPS
+        clock.tick(60) #60 fps
 
 main_menu()
