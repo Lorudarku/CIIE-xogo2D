@@ -5,13 +5,13 @@
 import pygame
 import director
 from director import *
-from menu import Menu
-import fase
-from fase import *
+from menew import Menu
+import escena
+from escena import *
 
 
 
-if name == 'main':
+if __name__ == "__main__":
 
     # Inicializamos la libreria de pygame
     pygame.init()

@@ -23,9 +23,9 @@ class GestorRecursos(object):
             fullname = os.path.join('imagenes', nombre)
             try:
                 imagen = pygame.image.load(fullname)
-            except pygame.error as message:
-                print('Cannot load image:', fullname)
-                raise SystemExit(message)
+            except pygame.error.message:
+                print ('Cannot load image:', fullname)
+                raise SystemExit.message
             imagen = imagen.convert()
             if colorkey is not None:
                 if colorkey is -1:
@@ -53,3 +53,9 @@ class GestorRecursos(object):
             cls.recursos[nombre] = datos
             # Se devuelve
             return datos
+
+##################### YO! PREGUNTA AL PRFE SI GESTIONAR ESTE RECURSO #############################################################
+    @classmethod
+    def CargarFuenteTexto(cls,nombre,size): #Devuelve Press-Start-2P en el tamaño que le indiquemos     
+        fullname = os.path.join('imagenes', nombre)
+        return pygame.font.Font(fullname, size)
