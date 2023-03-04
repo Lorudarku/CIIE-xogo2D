@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 import pygame
 
-ANCHO_PANTALLA = 800
-ALTO_PANTALLA = 600
+ANCHO_PANTALLA = 1200
+ALTO_PANTALLA = 720
 
 # -------------------------------------------------
 # Clase Escena con lo metodos abstractos
