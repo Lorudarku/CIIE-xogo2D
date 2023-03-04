@@ -5,7 +5,7 @@ import pyganim
 from pygame.locals import *
 from escena import *
 from gestorRecursos import *
-#from fase import Fase
+from fase import Fase
 # -------------------------------------------------
 # Clase abstracta ElementoGUI
 
@@ -74,10 +74,10 @@ class ReactiveButton(ElementoGUI):
             self.text = self.font.render(self.text_input, True, self.base_color)
     
     #Actualiza la ventana
-    def dibujar(self, ventana): 
+    def dibujar(self, pantalla): 
         if self.image is not None:
-            ventana.blit(self.image, self.rect)
-        ventana.blit(self.text, self.text_rect)
+            pantalla.blit(self.image, self.rect)
+        pantalla.blit(self.text, self.text_rect)
 
 class ReactiveButtonJugar(ReactiveButton):
     def __init__(self, pantalla):
@@ -142,8 +142,8 @@ class Text(ElementoGUI):
         ElementoGUI.__init__(self, pantalla, self.text_rect)
         
     #Actualiza la ventana
-    def dibujar(self, ventana): 
-        ventana.blit(self.text, self.text_rect)
+    def dibujar(self, pantalla): 
+        pantalla.blit(self.text, self.text_rect)
 
 class MenuText(Text):
     def __init__(self, pantalla):
@@ -259,11 +259,9 @@ class Menu(Escena):
     def salirPrograma(self):
         self.director.salirPrograma()
 
-    def ejecutarJuego(self):
-        #########################################PLACEHOLDER CAMBIALOOOOO###############################
-        self.director.salirPrograma()
-       # fase = Fase(self.director)
-        #self.director.apilarEscena(fase)
+    def ejecutarJuego(self):    
+        fase = Fase(self.director)
+        self.director.apilarEscena(fase)
 
     def mostrarPantallaInicial(self):
         self.pantallaActual = 0
