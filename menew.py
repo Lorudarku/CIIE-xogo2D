@@ -52,8 +52,9 @@ class ReactiveButton(ElementoGUI):
         ElementoGUI.__init__(self, pantalla, self.text.get_rect())
         self.establecerPosicion(posicion)
     '''
-    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color, pantalla):
         self.image = GestorRecursos.CargarImagen(image) #Imagen del boton
+        self.pantalla=pantalla
         self.x_pos = pos[0] #Posicion x del boton
         self.y_pos = pos[1] #Posicion y del boton
         self.font = font #Fuente del texto del boton
@@ -86,7 +87,7 @@ class ReactiveButtonJugar(ReactiveButton):
         ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
         texto="Jugar", posicion=(600, 250))
         '''
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 250), text_input="Jugar", font=fuente, base_color="#d7fcd4", hovering_color="Green")
+        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 250), text_input="Jugar", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
     
     def accion(self):
         self.pantalla.menu.ejecutarJuego()
@@ -98,7 +99,7 @@ class ReactiveButtonOpciones(ReactiveButton):
         """ ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
         texto="Opciones", posicion=(600, 400)) """
         
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 400), text_input="Opciones", font=fuente, base_color="#d7fcd4", hovering_color="Green")
+        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 400), text_input="Opciones", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
     
     def accion(self):
         #################################PROVISIONAL,CAMBIAR A ESCENA OPCIONES###############################################
@@ -110,7 +111,7 @@ class ReactiveButtonSalir(ReactiveButton):
         
         """ ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
         texto="Salir", posicion=(600, 550)) """
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 550), text_input="Salir", font=fuente, base_color="#d7fcd4", hovering_color="Green")
+        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 550), text_input="Salir", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
         
     def accion(self):
         self.pantalla.menu.salirPrograma()
