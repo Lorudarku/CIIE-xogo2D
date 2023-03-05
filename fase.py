@@ -71,7 +71,7 @@ class Fase(Escena):
 class Decorado:
     def __init__(self):
         self.imagen = GestorRecursos.CargarImagen('backgroundTest.png', -1)
-        self.imagen = pygame.transform.scale(self.imagen, (1200, 300))
+        self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
 
         self.rect = self.imagen.get_rect()
         self.rect.bottom = ALTO_PANTALLA
