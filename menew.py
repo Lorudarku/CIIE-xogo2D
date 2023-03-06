@@ -53,19 +53,19 @@ class ReactiveButton(ElementoGUI):
         self.establecerPosicion(posicion)
     '''
     def __init__(self, image, pos, text_input, font, base_color, hovering_color, pantalla):
-        self.image = GestorRecursos.CargarImagen(image) #Imagen del boton
-        self.pantalla=pantalla
-        self.x_pos = pos[0] #Posicion x del boton
-        self.y_pos = pos[1] #Posicion y del boton
-        self.font = font #Fuente del texto del boton
         self.base_color = base_color #Color base del boton
         self.hovering_color = hovering_color #Color del boton cuando el raton pasa por encima
+        
+        self.image = GestorRecursos.CargarImagen(image) #Imagen del boton
+        self.rect = self.image.get_rect(center=pos) #Rectangulo del boton
+
+        self.font = font #Fuente del texto del boton
         self.text_input = text_input #Texto del boton
         self.text = self.font.render(self.text_input, True, self.base_color)  #Texto del boton
-        if self.image is None: #Si no hay imagen, la imagen sera el texto
-            self.image = self.text 
-        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos)) #Rectangulo del boton
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos)) #Rectangulo del texto del boton
+        self.text_rect = self.text.get_rect(center=pos) #Rectangulo del texto del boton
+
+        ElementoGUI.__init__(self, pantalla, self.rect)
+
 
     #Cambia el color del boton cuando el raton pasa por encima
     def change_color(self, mouse_pos):
@@ -83,11 +83,8 @@ class ReactiveButton(ElementoGUI):
 class ReactiveButtonJugar(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
-        '''
-        ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
-        texto="Jugar", posicion=(600, 250))
-        '''
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 250), text_input="Jugar", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
+        ReactiveButton.__init__(self, "rectangulo-semitransparente.png",
+            (600, 250),"Jugar",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
         self.pantalla.menu.ejecutarJuego()
@@ -95,11 +92,8 @@ class ReactiveButtonJugar(ReactiveButton):
 class ReactiveButtonOpciones(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
-        
-        """ ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
-        texto="Opciones", posicion=(600, 400)) """
-        
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 400), text_input="Opciones", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (600, 400),"Opciones",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
         #################################PROVISIONAL,CAMBIAR A ESCENA OPCIONES###############################################
@@ -108,10 +102,8 @@ class ReactiveButtonOpciones(ReactiveButton):
 class ReactiveButtonSalir(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
-        
-        """ ReactiveButton.__init__(self, pantalla=pantalla, font=fuente, base_color="#d7fcd4", hovering_color="Green", imagen="rectangulo-semitransparente.png", 
-        texto="Salir", posicion=(600, 550)) """
-        ReactiveButton.__init__(self, image="rectangulo-semitransparente.png", pos=(600, 550), text_input="Salir", font=fuente, base_color="#d7fcd4", hovering_color="Green", pantalla=pantalla)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (600, 550),"Salir",fuente,"#d7fcd4","Green",pantalla)
         
     def accion(self):
         self.pantalla.menu.salirPrograma()

@@ -26,7 +26,10 @@ class GestorRecursos(object):
             except pygame.error:
                 print ('Cannot load image:', fullname)
                 raise SystemExit
-            imagen = imagen.convert()
+            # Para evitar convertir la transparencia
+            if nombre!="rectangulo-semitransparente.png":
+                imagen = imagen.convert()
+                
             if colorkey is not None:
                 if colorkey is -1:
                     colorkey = imagen.get_at((0,0))
