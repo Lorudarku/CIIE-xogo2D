@@ -151,9 +151,15 @@ class MenuText(Text):
 class PantallaGUI:
     def __init__(self, menu, nombreImagen):
         self.menu = menu
-        # Se carga la imagen de fondo
-        self.imagen = GestorRecursos.CargarImagen(nombreImagen)
-        self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
+        self.es_animacion = False #Variable que indica si la imagen es un gif
+        #Comprobamos si nombreImagen es una imagen o un gif
+        if nombreImagen[-3:] == "gif":
+            self.imagen = GestorRecursos.CargarAnimacion(nombreImagen)
+            self.es_animacion = True
+        # Si no, se carga la imagen de fondo
+        else:
+            self.imagen = GestorRecursos.CargarImagen(nombreImagen)
+            self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
         # Se tiene una lista de elementos GUI
         self.elementosGUI = []
         # Se tiene una lista de elementos de texto
@@ -163,8 +169,13 @@ class PantallaGUI:
 
 
     def dibujar(self, pantalla):
-        # Dibujamos primero la imagen de fondo
-        pantalla.blit(self.imagen, self.imagen.get_rect())
+        #Si la imagen es un gif, se dibuja la animación
+        if self.es_animacion:
+            self.imagen.blit(pantalla, (0,0))
+        #Si no, dibujamos la imagen de fondo
+        else:
+            pantalla.blit(self.imagen, self.imagen.get_rect())
+        
         # Después las animaciones
         for animacion in self.animaciones:
             animacion.dibujar(pantalla)
@@ -177,7 +188,8 @@ class PantallaGUI:
 
 class PantallaInicialGUI(PantallaGUI):
     def __init__(self, menu):
-        PantallaGUI.__init__(self, menu, 'fondoMenu1.gif')
+        #PantallaGUI.__init__(self, menu, 'fondoMenu.png')
+        PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
         # Creamos los botones y los metemos en la lista
         botonJugar = ReactiveButtonJugar(self)
         botonOpciones = ReactiveButtonOpciones(self)

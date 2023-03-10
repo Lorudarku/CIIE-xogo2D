@@ -2,6 +2,7 @@
 
 import pygame, sys, os
 from pygame.locals import *
+import pyganim, PIL
 
 
 # -------------------------------------------------
@@ -10,6 +11,32 @@ from pygame.locals import *
 # En este caso se implementa como una clase vacía, solo con métodos de clase
 class GestorRecursos(object):
     recursos = {}
+
+    @classmethod
+    def CargarAnimacion(cls, nombre, colorkey=None):
+        #gifMenu = pyganim.PygAnimation('Menu/fondoMenu.gif')
+        #gifMenu.play()
+        #Si el nombre de archivo está entre los recursos ya cargados
+        if nombre in cls.recursos:
+            #Se devuelve ese recurso
+            return cls.recursos[nombre]
+        #Si no ha sido cargado anteriormente
+        else:
+            #Se carga la animación indicando la carpeta en la que está
+            fullname = os.path.join('imagenes', nombre)
+            try:
+                gif = pyganim.PygAnimation(fullname)
+                gif.play()
+            except pygame.error:
+                print ('Cannot load animation:', fullname)
+                raise SystemExit
+            if colorkey is not None:
+                if colorkey is -1:
+                    colorkey = gif.get_at((0,0))
+                gif.set_colorkey(colorkey, RLEACCEL)
+            #Se almacena en el diccionario de recursos
+            cls.recursos[nombre] = gif
+            return gif
             
     @classmethod
     def CargarImagen(cls, nombre, colorkey=None):
