@@ -80,6 +80,7 @@ class ReactiveButton(ElementoGUI):
             pantalla.blit(self.image, self.rect)
         pantalla.blit(self.text, self.text_rect)
 
+##### BOTONES PANTALLA INICIO #####
 class ReactiveButtonJugar(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
@@ -96,17 +97,31 @@ class ReactiveButtonOpciones(ReactiveButton):
             (600, 400),"Opciones",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
-        #################################PROVISIONAL,CAMBIAR A ESCENA OPCIONES###############################################
-        self.pantalla.menu.ejecutarJuego()
+        self.pantalla.menu.mostrarPantallaOpciones()
 
 class ReactiveButtonSalir(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
-            (600, 550),"Salir",fuente,"#d7fcd4","Green",pantalla)
+            (600, 550),"Salir",fuente,"#ffddda","Red",pantalla)
         
     def accion(self):
         self.pantalla.menu.salirPrograma()
+
+##### BOTONES PANTALLA OPCIONES #####
+class ReactiveButtonVolver(ReactiveButton):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 20)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (80, 30),"Volver",fuente,"#fff5b9","Yellow",pantalla)
+        #Reescalamos la imagen y el rectangulo
+        self.image = pygame.transform.scale(self.image, (130,40))
+        self.rect = self.image.get_rect(center=(80, 30))
+        
+    def accion(self):
+        self.pantalla.menu.mostrarPantallaInicial()
+
+
 # -------------------------------------------------
 # Clase texto plano
 """ class Text(ElementoGUI):
@@ -144,22 +159,35 @@ class MenuText(Text):
         self.text = fuente.render("Menu", True, (255,255,255))
         Text.__init__(self, pantalla, self.text, (600,80))
 
+class OpcionesText(Text):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 100)
+        self.text = fuente.render("Opciones", True, (255,255,255))
+        Text.__init__(self, pantalla, self.text, (600,80))
+
         
 # -------------------------------------------------
 # Clase PantallaGUI y las distintas pantallas
 
 class PantallaGUI:
-    def __init__(self, menu, nombreImagen):
+    def __init__(self, menu, nombreImagen1, nombreImagen2 = None):
         self.menu = menu
         self.es_animacion = False #Variable que indica si la imagen es un gif
         #Comprobamos si nombreImagen es una imagen o un gif
-        if nombreImagen[-3:] == "gif":
-            self.imagen = GestorRecursos.CargarAnimacion(nombreImagen)
+        if nombreImagen1[-3:] == "gif":
+            self.imagen = GestorRecursos.CargarAnimacion(nombreImagen1)
             self.es_animacion = True
         # Si no, se carga la imagen de fondo
         else:
-            self.imagen = GestorRecursos.CargarImagen(nombreImagen)
+            self.es_animacion = False
+            self.imagen = GestorRecursos.CargarImagen(nombreImagen1)
             self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
+
+        # Si se ha pasado una segunda imagen, se carga
+        if nombreImagen2 != None:
+            self.imagen2 = GestorRecursos.CargarImagen(nombreImagen2)
+            self.imagen2 = pygame.transform.scale(self.imagen2, (ANCHO_PANTALLA, ALTO_PANTALLA))
+
         # Se tiene una lista de elementos GUI
         self.elementosGUI = []
         # Se tiene una lista de elementos de texto
@@ -175,6 +203,10 @@ class PantallaGUI:
         #Si no, dibujamos la imagen de fondo
         else:
             pantalla.blit(self.imagen, self.imagen.get_rect())
+
+        #Si existe imagen2, se dibuja
+        if hasattr(self, "imagen2"):
+            pantalla.blit(self.imagen2, self.imagen2.get_rect())
         
         # Después las animaciones
         for animacion in self.animaciones:
@@ -186,22 +218,6 @@ class PantallaGUI:
         for texto in self.textList:
             texto.dibujar(pantalla)
 
-class PantallaInicialGUI(PantallaGUI):
-    def __init__(self, menu):
-        #PantallaGUI.__init__(self, menu, 'fondoMenu.png')
-        PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
-        # Creamos los botones y los metemos en la lista
-        botonJugar = ReactiveButtonJugar(self)
-        botonOpciones = ReactiveButtonOpciones(self)
-        botonSalir = ReactiveButtonSalir(self)
-        textoMenu = MenuText(self)
-    
-        self.textList.append(textoMenu)
-        self.elementosGUI.append(botonJugar)
-        self.elementosGUI.append(botonOpciones)
-        self.elementosGUI.append(botonSalir)
-        # Creamos el texto y lo metemos en la lista
-      
     def eventos(self, lista_eventos):
         for evento in lista_eventos:
             MOUSE_POS = pygame.mouse.get_pos()
@@ -215,13 +231,37 @@ class PantallaInicialGUI(PantallaGUI):
                     if elemento.posicionEnElemento(evento.pos):
                         if (elemento == self.elementoClicado):
                             elemento.accion()
-            # if evento.type == MOUSEMOTION:
             for elemento in self.elementosGUI:
                elemento.change_color(MOUSE_POS)
 
-        """ for elemento in self.elementosGUI:
-            elemento.changecolor(MOUSE_POS)
-            elemento.changecolor(pygame.mouse.get_pos()) """
+class PantallaInicialGUI(PantallaGUI):
+    def __init__(self, menu):
+        PantallaGUI.__init__(self, menu, 'fondoMenu.png')
+        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
+        # Creamos los botones y los metemos en la lista
+        botonJugar = ReactiveButtonJugar(self)
+        botonOpciones = ReactiveButtonOpciones(self)
+        botonSalir = ReactiveButtonSalir(self)
+        textoMenu = MenuText(self)
+    
+        self.textList.append(textoMenu)
+        self.elementosGUI.append(botonJugar)
+        self.elementosGUI.append(botonOpciones)
+        self.elementosGUI.append(botonSalir)
+      
+        
+class PantallaOpcionesGUI(PantallaGUI):
+    def __init__(self, menu):
+        #Cargamos encima de la pantalla actual el fondo de opciones
+        PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png')
+        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
+  
+        # Creamos los botones y los metemos en la lista
+        botonVolver = ReactiveButtonVolver(self)
+        self.elementosGUI.append(botonVolver)
+        # Creamos el texto y lo metemos en la lista
+        textoOpciones = OpcionesText(self)
+        self.textList.append(textoOpciones)
                
 # -------------------------------------------------
 # Clase Menu, la escena en sí
@@ -235,7 +275,8 @@ class Menu(Escena):
         self.listaPantallas = []
         # Creamos las pantallas que vamos a tener
         #   y las metemos en la lista
-        self.listaPantallas.append(PantallaInicialGUI(self))
+        self.listaPantallas.append(PantallaInicialGUI(self)) #0
+        self.listaPantallas.append(PantallaOpcionesGUI(self)) #1
         # En que pantalla estamos actualmente
         self.mostrarPantallaInicial()
 
@@ -268,8 +309,8 @@ class Menu(Escena):
         fase = Fase(self.director)
         self.director.apilarEscena(fase)
 
+    def mostrarPantallaOpciones(self):
+        self.pantallaActual = 1
+
     def mostrarPantallaInicial(self):
         self.pantallaActual = 0
-
-    # def mostrarPantallaConfiguracion(self):
-    #    self.pantallaActual = ...

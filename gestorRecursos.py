@@ -54,7 +54,7 @@ class GestorRecursos(object):
                 print ('Cannot load image:', fullname)
                 raise SystemExit
             # Para evitar convertir la transparencia
-            if nombre!="rectangulo-semitransparente.png":
+            if ((nombre!="rectangulo-semitransparente.png") and (nombre!="rectangulo-semitransparente-1200x720.png")):
                 imagen = imagen.convert()
                 
             if colorkey is not None:
