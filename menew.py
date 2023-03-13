@@ -38,22 +38,6 @@ class ElementoGUI:
 # -------------------------------------------------
 # Clase reactive button
 class ReactiveButton(ElementoGUI):
-    '''
-    def __init__(self, pantalla, font, base_color, hovering_color, imagen, texto, posicion ):
-        self.imagen=GestorRecursos.CargarImagen(imagen)
-        self.base_color = base_color #Color base del boton
-        self.hovering_color = hovering_color #Color del boton cuando el raton pasa por encima
-        self.font = font #Fuente del texto del boton
-         #Posicion y del boton
-        # Se llama al método de la clase padre con el rectángulo que ocupa 
-        ElementoGUI.__init__(self, pantalla, self.imagen.get_rect())
-        self.establecerPosicion(posicion)
-        
-        self.text_input = texto #Texto del boton
-        self.text = self.font.render(self.text_input, True, self.base_color)  #Texto del boton
-        ElementoGUI.__init__(self, pantalla, self.text.get_rect())
-        self.establecerPosicion(posicion)
-    '''
     def __init__(self, image, pos, text_input, font, base_color, hovering_color, pantalla):
         self.base_color = base_color #Color base del boton
         self.hovering_color = hovering_color #Color del boton cuando el raton pasa por encima
@@ -149,25 +133,6 @@ class ReactiveButtonMusicaMenos(ReactiveButton):
 
 # -------------------------------------------------
 # Clase texto plano
-""" class Text(ElementoGUI):
-    def __init__(self, pos, text_input, font, base_color):
-        self.x_pos = pos[0] #Posicion x del texto
-        self.y_pos = pos[1] #Posicion y del texto
-        self.font = font #Fuente del texto del boton
-        self.base_color = base_color #Color base del boton
-        self.text_input = text_input #Texto del boton
-        self.text = self.font.render(self.text_input, True, self.base_color)  #Texto del boton
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos)) #Rectangulo del texto del boton
-        
-    #Actualiza la ventana
-    def dibujar(self, ventana): 
-        ventana.blit(self.text, self.text_rect)
-
-class MenuText(Text):
-    def __init__(self, pantalla):
-        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 100)
-        Text.__init__(self, (600, 100), "Menu", fuente, (255,255,255)) """
-
 class Text(ElementoGUI):
     def __init__(self, pantalla, text, pos):
         self.text= text
