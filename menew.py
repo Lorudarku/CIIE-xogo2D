@@ -7,6 +7,7 @@ from escena import *
 from gestorRecursos import *
 from fase import Fase
 from math import *
+from random import randint
 # -------------------------------------------------
 # Clase abstracta ElementoGUI
 
@@ -283,8 +284,12 @@ class PantallaGUI:
 
 class PantallaInicialGUI(PantallaGUI):
     def __init__(self, menu):
+        #Creamos un array de strings con los nombres de las canciones
+        canciones = ["Cry_Thunder_8bit.mp3", "Fury_Of_The_Storm_8bit.mp3", "Through_The_Fire_And_Flames_8bit.mp3"]
+        #Escogemos un numero aleatorio entre 0 y 2
+        numeroCancion = randint(0,2)
         #Cargamos la musica inicial
-        GestorRecursos.CargarSonido("Cry_Thunder_8bit.mp3",True)
+        GestorRecursos.CargarSonido(canciones[numeroCancion],True)
         pygame.mixer.music.set_volume(0) #volumen inicial
         pygame.mixer.music.play()
 
