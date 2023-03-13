@@ -6,6 +6,7 @@ from pygame.locals import *
 from escena import *
 from gestorRecursos import *
 from fase import Fase
+from math import *
 # -------------------------------------------------
 # Clase abstracta ElementoGUI
 
@@ -121,6 +122,29 @@ class ReactiveButtonVolver(ReactiveButton):
     def accion(self):
         self.pantalla.menu.mostrarPantallaInicial()
 
+class ReactiveButtonMusicaMas(ReactiveButton):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (700, 250),">",fuente,"#abdbff","Blue",pantalla)
+        #Reescalamos la imagen y el rectangulo
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = self.image.get_rect(center=(700, 250))
+        
+    def accion(self):
+        self.pantalla.menu.subirVolumen()
+        
+class ReactiveButtonMusicaMenos(ReactiveButton):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (600, 250),"<",fuente,"#abdbff","Blue",pantalla)
+        #Reescalamos la imagen y el rectangulo
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = self.image.get_rect(center=(600, 250))
+        
+    def accion(self):
+        self.pantalla.menu.bajarVolumen()
 
 # -------------------------------------------------
 # Clase texto plano
@@ -153,19 +177,42 @@ class Text(ElementoGUI):
     def dibujar(self, pantalla): 
         pantalla.blit(self.text, self.text_rect)
 
+#### Texto plano del menu inicial ####
 class MenuText(Text):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 100)
         self.text = fuente.render("Menu", True, (255,255,255))
         Text.__init__(self, pantalla, self.text, (600,80))
 
+#### Texto plano de la pantalla de opciones ####
 class OpcionesText(Text):
     def __init__(self, pantalla):
-        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 100)
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 80)
         self.text = fuente.render("Opciones", True, (255,255,255))
-        Text.__init__(self, pantalla, self.text, (600,80))
+        Text.__init__(self, pantalla, self.text, (550,80))
 
-        
+class MusicaText(Text):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
+        self.text = fuente.render("Musica", True, "#6fc1ff")
+        Text.__init__(self, pantalla, self.text, (430,250))
+
+
+class MedidorMusica(Text):
+    def __init__(self, pantalla, medidor):
+        #Convertrimos el valor del medidor a string
+        medidor = str(floor(medidor))
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
+        self.text = fuente.render(medidor, True, "Orange")
+        Text.__init__(self, pantalla, self.text, (650,250))
+
+    def actualizar(self, medidor):
+        #Convertrimos el valor del medidor a string
+        medidor = str(floor(medidor))
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
+        self.text = fuente.render(medidor, True, "Orange")
+        Text.__init__(self, self.pantalla, self.text, (650,250))
+
 # -------------------------------------------------
 # Clase PantallaGUI y las distintas pantallas
 
@@ -236,6 +283,11 @@ class PantallaGUI:
 
 class PantallaInicialGUI(PantallaGUI):
     def __init__(self, menu):
+        #Cargamos la musica inicial
+        GestorRecursos.CargarSonido("Cry_Thunder_8bit.mp3",True)
+        pygame.mixer.music.set_volume(0) #volumen inicial
+        pygame.mixer.music.play()
+
         PantallaGUI.__init__(self, menu, 'fondoMenu.png')
         #PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
         # Creamos los botones y los metemos en la lista
@@ -258,10 +310,18 @@ class PantallaOpcionesGUI(PantallaGUI):
   
         # Creamos los botones y los metemos en la lista
         botonVolver = ReactiveButtonVolver(self)
+        botonMusicaMenos = ReactiveButtonMusicaMenos(self)
+        botonMusicaMas = ReactiveButtonMusicaMas(self)
         self.elementosGUI.append(botonVolver)
+        self.elementosGUI.append(botonMusicaMenos)
+        self.elementosGUI.append(botonMusicaMas)
         # Creamos el texto y lo metemos en la lista
         textoOpciones = OpcionesText(self)
+        textoMusica = MusicaText(self)
+        medidorMusica = MedidorMusica(self, pygame.mixer.music.get_volume())
         self.textList.append(textoOpciones)
+        self.textList.append(textoMusica)    
+        self.textList.append(medidorMusica)
                
 # -------------------------------------------------
 # Clase Menu, la escena en sí
@@ -276,6 +336,7 @@ class Menu(Escena):
         # Creamos las pantallas que vamos a tener
         #   y las metemos en la lista
         self.listaPantallas.append(PantallaInicialGUI(self)) #0
+        self.auxBool = True
         self.listaPantallas.append(PantallaOpcionesGUI(self)) #1
         # En que pantalla estamos actualmente
         self.mostrarPantallaInicial()
@@ -313,4 +374,27 @@ class Menu(Escena):
         self.pantallaActual = 1
 
     def mostrarPantallaInicial(self):
+        if self.auxBool:
+            self.subirVolumen()
+            self.auxBool = False
         self.pantallaActual = 0
+
+    def subirVolumen(self):
+        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() + 0.1)
+        if pygame.mixer.music.get_volume() >= 1:
+            pygame.mixer.music.set_volume(1)
+        volumen = pygame.mixer.music.get_volume()
+        #redondeamos el volumen a 1 decimal
+        volumen = round(volumen,1)
+        pygame.mixer.music.set_volume(volumen)
+        self.listaPantallas[1].textList[2].actualizar(volumen*10)
+
+    def bajarVolumen(self):
+        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() - 0.1)
+        if pygame.mixer.music.get_volume() <= 0:
+            pygame.mixer.music.set_volume(0)
+        volumen = pygame.mixer.music.get_volume()
+        #redondeamos el volumen a 1 decimal
+        volumen = round(volumen,1)
+        pygame.mixer.music.set_volume(volumen)
+        self.listaPantallas[1].textList[2].actualizar(volumen*10)

@@ -54,7 +54,7 @@ class GestorRecursos(object):
                 print ('Cannot load image:', fullname)
                 raise SystemExit
             # Para evitar convertir la transparencia
-            if ((nombre!="rectangulo-semitransparente.png") and (nombre!="rectangulo-semitransparente-1200x720.png")):
+            if (nombre!="rectangulo-semitransparente.png"):
                 imagen = imagen.convert()
                 
             if colorkey is not None:
@@ -89,3 +89,25 @@ class GestorRecursos(object):
     def CargarFuenteTexto(cls,nombre,size): #Devuelve Press-Start-2P en el tamaño que le indiquemos     
         fullname = os.path.join('imagenes', nombre)
         return pygame.font.Font(fullname, size)
+    
+    @classmethod
+    def CargarSonido(cls, nombre, esMusica):
+     #Si el nombre de archivo está entre los recursos ya cargados
+        if nombre in cls.recursos:
+            # Se devuelve ese recurso
+            return cls.recursos[nombre]
+        # Si no ha sido cargado anteriormente
+        else:
+            try:
+                if (esMusica):
+                    sound = pygame.mixer.music.load("sonidos/musica/" + nombre)
+                    
+                else:
+                    sound = pygame.mixer.Sound("sonidos/" + nombre)
+            except pygame.error:
+                print ('Cannot load sound:', nombre)
+                raise SystemExit
+            # Se almacena
+            cls.recursos[nombre] = sound
+            # Se devuelve
+            return sound
