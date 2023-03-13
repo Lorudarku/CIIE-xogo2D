@@ -31,7 +31,7 @@ class GestorRecursos(object):
                 print ('Cannot load animation:', fullname)
                 raise SystemExit
             if colorkey is not None:
-                if colorkey is -1:
+                if colorkey == -1:
                     colorkey = gif.get_at((0,0))
                 gif.set_colorkey(colorkey, RLEACCEL)
             #Se almacena en el diccionario de recursos
@@ -58,7 +58,7 @@ class GestorRecursos(object):
                 imagen = imagen.convert()
                 
             if colorkey is not None:
-                if colorkey is -1:
+                if colorkey == -1:
                     colorkey = imagen.get_at((0,0))
                 imagen.set_colorkey(colorkey, RLEACCEL)
             # Se almacena
@@ -100,8 +100,7 @@ class GestorRecursos(object):
         else:
             try:
                 if (esMusica):
-                    sound = pygame.mixer.music.load("sonidos/musica/" + nombre)
-                    
+                    sound = pygame.mixer.music.load("sonidos/musica/" + nombre)    
                 else:
                     sound = pygame.mixer.Sound("sonidos/" + nombre)
             except pygame.error:

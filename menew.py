@@ -378,7 +378,7 @@ class Menu(Escena):
             self.subirVolumen()
             self.auxBool = False
         self.pantallaActual = 0
-
+    
     def subirVolumen(self):
         volumen = pygame.mixer.music.get_volume() + 0.1
         #redondeamos el volumen a 1 decimal
