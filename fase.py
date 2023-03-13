@@ -5,6 +5,7 @@ from escena import *
 from personajes import *
 from plataforma import Plataforma
 from pygame.locals import *
+from drunken import *
 
 # -------------------------------------------------
 # -------------------------------------------------
@@ -66,7 +67,7 @@ class Fase(Escena):
             if evento.type == pygame.QUIT:
                 self.director.salirPrograma()
         teclasPulsadas = pygame.key.get_pressed()
-        self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT)
+        self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
        
 class Decorado:
     def __init__(self):
