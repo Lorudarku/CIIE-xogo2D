@@ -380,21 +380,19 @@ class Menu(Escena):
         self.pantallaActual = 0
 
     def subirVolumen(self):
-        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() + 0.1)
-        if pygame.mixer.music.get_volume() >= 1:
-            pygame.mixer.music.set_volume(1)
-        volumen = pygame.mixer.music.get_volume()
+        volumen = pygame.mixer.music.get_volume() + 0.1
         #redondeamos el volumen a 1 decimal
         volumen = round(volumen,1)
+        if volumen >= 1:
+            volumen = 1
         pygame.mixer.music.set_volume(volumen)
         self.listaPantallas[1].textList[2].actualizar(volumen*10)
 
     def bajarVolumen(self):
-        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() - 0.1)
-        if pygame.mixer.music.get_volume() <= 0:
-            pygame.mixer.music.set_volume(0)
-        volumen = pygame.mixer.music.get_volume()
+        volumen = pygame.mixer.music.get_volume() - 0.1
         #redondeamos el volumen a 1 decimal
         volumen = round(volumen,1)
+        if volumen <= 0:
+            volumen = 0
         pygame.mixer.music.set_volume(volumen)
         self.listaPantallas[1].textList[2].actualizar(volumen*10)
