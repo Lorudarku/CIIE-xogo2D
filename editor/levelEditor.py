@@ -10,7 +10,7 @@ FPS = 60
 
 #ventana
 SCREEN_WIDTH = 1200
-SCREEN_HEIGTH = 700
+SCREEN_HEIGTH = 720
 SIDE_MARGIN = 300
 
 screen = pygame.display.set_mode((SCREEN_WIDTH + SIDE_MARGIN, SCREEN_HEIGTH))
@@ -18,8 +18,8 @@ pygame.display.set_caption('Level editor')
 
 
 #variables
-COLS = 30
-MAX_ROWS = 18
+COLS = 25
+MAX_ROWS = 15
 TILE_SIZE = SCREEN_WIDTH // COLS
 TILE_TYPES = 16
 level = 0
