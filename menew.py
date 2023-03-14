@@ -83,7 +83,7 @@ class ReactiveButtonOpciones(ReactiveButton):
             (600, 400),"Opciones",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
-        self.pantalla.menu.mostrarPantallaOpciones()
+        self.pantalla.menu.mostrarPantallaOpciones(False)
 
 class ReactiveButtonSalir(ReactiveButton):
     def __init__(self, pantalla):
@@ -96,7 +96,8 @@ class ReactiveButtonSalir(ReactiveButton):
 
 ##### BOTONES PANTALLA OPCIONES #####
 class ReactiveButtonVolver(ReactiveButton):
-    def __init__(self, pantalla):
+    def __init__(self, pantalla, ingame=False):
+        self.ingame = ingame
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 20)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
             (80, 30),"Volver",fuente,"#fff5b9","Yellow",pantalla)
@@ -105,7 +106,10 @@ class ReactiveButtonVolver(ReactiveButton):
         self.rect = self.image.get_rect(center=(80, 30))
         
     def accion(self):
-        self.pantalla.menu.mostrarPantallaInicial()
+        if self.ingame:
+            self.pantalla.menu.mostrarPantallaJuego()
+        else:
+            self.pantalla.menu.mostrarPantallaInicial()
 
 class ReactiveButtonMusicaMas(ReactiveButton):
     def __init__(self, pantalla):
@@ -273,13 +277,19 @@ class PantallaInicialGUI(PantallaGUI):
       
         
 class PantallaOpcionesGUI(PantallaGUI):
-    def __init__(self, menu):
+    def __init__(self, menu, ingame = False):
         #Cargamos encima de la pantalla actual el fondo de opciones
-        PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png')
-        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
+        if ingame: 
+            PantallaGUI.__init__(self, menu, 'rectangulo-semitransparente.png') #No se carga el fondo del menu por encima
+            botonVolver = ReactiveButtonVolver(self, True)
+        else:
+            PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png') #Se carga el fondo del menu y despues el rectangulo semitransparente
+            #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
+            botonVolver = ReactiveButtonVolver(self, False)
+
   
         # Creamos los botones y los metemos en la lista
-        botonVolver = ReactiveButtonVolver(self)
+        #El boton de volver es distinto si estamos en el menu o en el juego, por eso se crea arriba
         botonMusicaMenos = ReactiveButtonMusicaMenos(self)
         botonMusicaMas = ReactiveButtonMusicaMas(self)
         self.elementosGUI.append(botonVolver)
@@ -307,7 +317,8 @@ class Menu(Escena):
         #   y las metemos en la lista
         self.listaPantallas.append(PantallaInicialGUI(self)) #0
         self.auxBool = True
-        self.listaPantallas.append(PantallaOpcionesGUI(self)) #1
+        self.listaPantallas.append(PantallaOpcionesGUI(self, False)) #1
+        self.listaPantallas.append(PantallaOpcionesGUI(self, True)) #2
         # En que pantalla estamos actualmente
         self.mostrarPantallaInicial()
 
@@ -317,11 +328,8 @@ class Menu(Escena):
     def eventos(self, lista_eventos):
         # Se mira si se quiere salir de esta escena
         for evento in lista_eventos:
-            # Si se quiere salir, se le indica al director
-            if evento.type == KEYDOWN: #Si se pulsa una tecla
-                if evento.key == K_ESCAPE: #Si es la tecla escape
-                    self.salirPrograma()
-            elif evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
+            # Si se quiere salir, se le indica al director 
+            if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
                 self.director.salirPrograma()
 
         # Se pasa la lista de eventos a la pantalla actual
@@ -340,8 +348,11 @@ class Menu(Escena):
         fase = Fase(self.director)
         self.director.apilarEscena(fase)
 
-    def mostrarPantallaOpciones(self):
-        self.pantallaActual = 1
+    def mostrarPantallaOpciones(self, ingame=False):
+        if ingame:
+            self.pantallaActual = 2
+        else:
+            self.pantallaActual = 1
 
     def mostrarPantallaInicial(self):
         if self.auxBool:
