@@ -41,7 +41,7 @@ class Fase(Escena):
         self.grupoJugadores = pygame.sprite.Group( self.jugador1)
 
         # Ponemos a los jugadores en sus posiciones iniciales
-        self.jugador1.establecerPosicion((200, 551))
+        self.jugador1.establecerPosicion((200, 400))
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
@@ -72,8 +72,9 @@ class Fase(Escena):
 class Decorado:
     def __init__(self):
         self.imagen = GestorRecursos.CargarImagen('backgroundTest.png', -1)
+        cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
         self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
-
+        pygame.Surface.blit(self.imagen,cubo,(0, 550, 1200, 15))
         self.rect = self.imagen.get_rect()
         self.rect.bottom = ALTO_PANTALLA
 

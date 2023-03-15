@@ -68,7 +68,7 @@ class MiSprite(pygame.sprite.Sprite):
 
     def update(self, tiempo):
         incrementox = math.sin(self.angle) * self.speed
-        incrementoy = math.cos(self.angle) * self.speed
+        incrementoy = -math.cos(self.angle) * self.speed
         self.incrementarPosicion((incrementox, incrementoy))
 
 
@@ -143,8 +143,7 @@ class Personaje(MiSprite):
             speed += 0.9
         
         self.angle, self.speed = self.physics.add_vectors(self.angle, self.speed, angle, speed)
-        print(self.angle)
-        print(self.speed)
+     
         self.numPostura=SPRITE_SALTANDO
         self.jumpCount = 0
          
@@ -156,12 +155,13 @@ class Personaje(MiSprite):
         else:
             self.movimiento = movimiento
 
-    def movimiento(self):
-        
+    def moveset(self,grupoPlataformas):
+        angle=self.angle
+        speed=self.speed
 
         # Si vamos a la izquierda o a la derecha        
         if (self.movimiento == IZQUIERDA):
-
+            
             self.mirando = self.movimiento
             #si no está agachado AKA cargando el salto, se mueve
             if not self.numPostura==SPRITE_AGACHADO:
@@ -228,23 +228,25 @@ class Personaje(MiSprite):
 
 
         # Además, si estamos en el aire
-        if self.numPostura == SPRITE_SALTANDO:
+        #if self.numPostura == SPRITE_SALTANDO:
 
-            # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
-            #  Para ello, miramos si hay colision con alguna plataforma del grupo
-            plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
-            #  Ademas, esa colision solo nos interesa cuando estamos cayendo
-            #  y solo es efectiva cuando caemos encima, no de lado, es decir,
-            #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
-            if (plataforma != None)  and (plataforma.rect.bottom>self.rect.bottom):
-                # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
-                #  para poder detectar cuando se cae de ella
-                self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
-                # Lo ponemos como quieto
-                self.numPostura = SPRITE_QUIETO
-                # Y estará quieto en el eje y
-                
-
+        # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
+        #  Para ello, miramos si hay colision con alguna plataforma del grupo
+        plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
+        #  Ademas, esa colision solo nos interesa cuando estamos cayendo
+        #  y solo es efectiva cuando caemos encima, no de lado, es decir,
+        #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
+        if (plataforma != None)  and (plataforma.rect.bottom>self.rect.bottom):
+            print("plataforma")
+            # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
+            #  para poder detectar cuando se cae de ella
+            self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
+            # Lo ponemos como quieto
+            self.numPostura = SPRITE_QUIETO
+            # Y estará quieto en el eje y
+            #speed=0
+        self.angle=angle
+        self.speed=speed
             # Si no caemos en una plataforma, aplicamos el efecto de la gravedad
 
 
@@ -271,15 +273,14 @@ class Personaje(MiSprite):
 
 
     def update(self, grupoPlataformas, tiempo):
-        speed=self.speed
-        angle= self.angle
+        
 
         self.add_gravity()
-        self.movimiento()
+        self.moveset(grupoPlataformas)
+        
         self.actualizarPostura()
 
-        self.speed=speed
-        self.angle=angle
+        
 
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo
