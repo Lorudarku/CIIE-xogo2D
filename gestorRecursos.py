@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import pygame, sys, os
+import pygame, sys, os, csv
 from pygame.locals import *
 import pyganim, PIL
 
@@ -110,3 +110,24 @@ class GestorRecursos(object):
             cls.recursos[nombre] = sound
             # Se devuelve
             return sound
+
+    @classmethod
+    def CargarArchivoFase(cls, nombre):
+        # Si el nombre de archivo está entre los recursos ya cargados
+        if nombre in cls.recursos:
+            # Se devuelve ese recurso
+            return cls.recursos[nombre]
+        # Si no ha sido cargado anteriormente
+        else:
+            # Se carga el recurso indicando el nombre de su carpeta
+            fullname = os.path.join('niveles', nombre)
+            datos = []
+            with open(fullname, newline = '') as csvfile:
+                reader = csv.reader(csvfile, delimiter = ',')
+            for x, row in enumerate(reader):
+                for y, tile in enumerate(row):
+                    datos[x][y] = int(tile)
+            # Se almacena
+            cls.recursos[nombre] = datos
+            # Se devuelve
+            return datos

@@ -10,17 +10,25 @@ from drunken import *
 # -------------------------------------------------
 # -------------------------------------------------
 # Constantes
-# -------------------------------------------------
-# -------------------------------------------------
+COLUMNAS = 25
+FILAS = 15
+TILE_SIZE = escena.ALTO_PANTALLA // COLUMNAS
+TILE_TYPES = 16
+nivel = 0
 
+# Los bordes de la pantalla para hacer scroll vertical
 
-# Los bordes de la pantalla para hacer scroll horizontal
+img_list = []
+for x in range(TILE_TYPES):
+    img = GestorRecursos.CargarImagen(f'{nivel}.png')
+    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+    img_list.append(img)
 
 # -------------------------------------------------
 # Clase Fase
 
 class Fase(Escena):
-    def __init__(self, director):
+    def __init__(self, director, archivoFase):
 
         # Habria que pasarle como parámetro el número de fase, a partir del cual se cargue
         #  un fichero donde este la configuracion de esa fase en concreto, con cosas como
@@ -34,7 +42,7 @@ class Fase(Escena):
 
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
-
+        datos = GestorRecursos.CargarArchivoFase(archivoFase)
         # Creamos el decorado y el fondo
         self.decorado = Decorado()
         self.jugador1 = Jugador()
@@ -87,3 +95,17 @@ class Decorado:
 
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
+
+class Nivel():
+    def __init__(self):
+        self.obstacultos = []
+    
+    def procesar_datos(self, datos):
+        for y, fila in enumerate(datos):
+            for x, tile in enumerate(fila):
+                if tile >= 0:
+                    img = img_list[tile]
+                    img_rect = img.get_rect()
+                    img_rect.x = x * TILE_SIZE
+                    img_rect.y = y * TILE_SIZE
+                    
