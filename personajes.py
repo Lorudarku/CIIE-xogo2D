@@ -30,14 +30,12 @@ SPRITE_APLASTADO = 5
 
 # Velocidades de los distintos personajes
 VELOCIDAD_JUGADOR = 1.4 # Pixeles por milisegundo
-VELOCIDAD_MAXIMA_JUGADOR=11
+VELOCIDAD_MAXIMA_JUGADOR=15
 VELOCIDAD_SALTO_JUGADOR = 0.3 # Pixeles por milisegundo
 RETARDO_ANIMACION_JUGADOR = 5 # updates que durará cada imagen del personaje
                               # debería de ser un valor distinto para cada postura
 
-VELOCIDAD_SNIPER = 0.12 # Pixeles por milisegundo
-VELOCIDAD_SALTO_SNIPER = 0.27 # Pixeles por milisegundo
-RETARDO_ANIMACION_SNIPER = 5 # updates que durará cada imagen del personaje
+# updates que durará cada imagen del personaje
  
 GRAVEDAD = 0.0003 # Píxeles / ms2
 
@@ -195,7 +193,7 @@ class Personaje(MiSprite):
         elif direccion==ESPACIOIAB:
             angle= -3*math.pi/4
             
-        return self.physics.add_vectors(self.angle, self.speed, angle, speed)
+        return angle,speed
          
     # Metodo base para realizar el movimiento: simplemente se le indica cual va a hacer, y lo almacena
     def mover(self, movimiento):
@@ -223,7 +221,7 @@ class Personaje(MiSprite):
             # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
             
             if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB):
-                self.dash(self.movimiento)
+                angle,speed=self.dash(self.movimiento)
             print(self.movimiento)  
             self.movimiento = QUIETO  
         else:
@@ -306,6 +304,7 @@ class Personaje(MiSprite):
         
         
         self.angle=angle
+        
         self.speed=speed
             # Si no caemos en una plataforma, aplicamos el efecto de la gravedad
 
@@ -341,7 +340,8 @@ class Personaje(MiSprite):
         self.actualizarPostura()
         # print(self.speed)
         
-
+        if self.speed>VELOCIDAD_MAXIMA_JUGADOR: 
+            self.speed=VELOCIDAD_MAXIMA_JUGADOR
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo
         #  calcule la nueva posición del Sprite
