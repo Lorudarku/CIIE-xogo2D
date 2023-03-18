@@ -131,6 +131,17 @@ class Personaje(MiSprite):
     def add_gravity(self):
         self.angle, self.speed = self.physics.add_vectors(self.angle, self.speed, self.physics.gravity[0], self.physics.gravity[1])
 
+    def prueba_salto(self):
+        print("salteeeeee")
+            
+        speed = (4)
+        angle=0
+        
+        self.numPostura=SPRITE_SALTANDO
+        self.jumpCount = 0
+        return self.physics.add_vectors(self.angle, self.speed, angle, speed)
+     
+        
     def saltar(self,direccion):
         print("salteeeeee")
             
@@ -144,10 +155,12 @@ class Personaje(MiSprite):
             angle= -math.pi/3 * (1 - self.jumpCount / 45.5)
             speed += 0.9
         
-        self.angle, self.speed = self.physics.add_vectors(self.angle, self.speed, angle, speed)
-     
         self.numPostura=SPRITE_SALTANDO
         self.jumpCount = 0
+        
+        return self.physics.add_vectors(self.angle, self.speed, angle, speed)
+     
+        
          
     # Metodo base para realizar el movimiento: simplemente se le indica cual va a hacer, y lo almacena
     def mover(self, movimiento):
@@ -185,7 +198,7 @@ class Personaje(MiSprite):
                     angle=-math.pi/2
                     speed=self.walkSpeed
             else :
-                self.saltar("izquierda")
+                angle,speed=self.saltar("izquierda")
                 self.numPostura =SPRITE_SALTANDO
 
              # Si no estamos en el aire
@@ -205,7 +218,7 @@ class Personaje(MiSprite):
                 angle=math.pi/2
                 speed=self.walkSpeed
             else:
-                self.saltar("derecha")
+                angle,speed=self.saltar("derecha")
                 self.numPostura =SPRITE_SALTANDO
 
             
@@ -220,22 +233,24 @@ class Personaje(MiSprite):
         # Si queremos saltar
         elif self.movimiento == ESPACIO:
             self.jumpCount += 1
-
+           
+               
             if self.numPostura != SPRITE_AGACHADO:
                 self.numPostura =SPRITE_AGACHADO
 
             elif self.jumpCount>self.maxJumpCount:
                 if self.movimiento==DERECHA: 
                     self.mirando = self.movimiento
-                    self.saltar("derecha")
+                    angle,speed=self.saltar("derecha")
                 elif self.movimiento==IZQUIERDA:
                     self.mirando = self.movimiento
-                    self.saltar("izquierda")
+                    angle,speed=self.saltar("izquierda")
                 else:
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
-                    self.saltar("arriba")
+                    angle,speed=self.saltar("arriba")
+            
 
-
+       
         # Si no se ha pulsado ninguna tecla
         elif self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
@@ -283,7 +298,7 @@ class Personaje(MiSprite):
         self.moveset(grupoPlataformas)
         
         self.actualizarPostura()
-
+        print(self.speed)
         
 
         
