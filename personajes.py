@@ -332,9 +332,8 @@ class Personaje(MiSprite):
 
     def update(self, grupoPlataformas, tiempo):
         
-
-        self.add_gravity()
         
+        self.add_gravity()
         self.moveset(grupoPlataformas)
         
         self.actualizarPostura()
