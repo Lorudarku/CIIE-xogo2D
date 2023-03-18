@@ -132,6 +132,8 @@ class Personaje(MiSprite):
         self.angle, self.speed = self.physics.add_vectors(self.angle, self.speed, self.physics.gravity[0], self.physics.gravity[1])
 
     def saltar(self,direccion):
+        print("salteeeeee")
+            
         speed = (1.5 + ((self.jumpCount/5)**1.13))
         if direccion == "arriba":
             angle=0
@@ -158,6 +160,21 @@ class Personaje(MiSprite):
     def moveset(self,grupoPlataformas):
         angle=self.angle
         speed=self.speed
+
+        # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
+        #  Para ello, miramos si hay colision con alguna plataforma del grupo
+        plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
+        #  Ademas, esa colision solo nos interesa cuando estamos cayendo
+        #  y solo es efectiva cuando caemos encima, no de lado, es decir,
+        #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
+        if (plataforma != None)  and (plataforma.rect.bottom>self.rect.bottom):
+           
+            # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
+            #  para poder detectar cuando se cae de ella
+            self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
+            # Lo ponemos como quieto
+            # Y estará quieto en el eje y
+            speed=0
 
         # Si vamos a la izquierda o a la derecha        
         if (self.movimiento == IZQUIERDA):
@@ -215,36 +232,23 @@ class Personaje(MiSprite):
                     self.mirando = self.movimiento
                     self.saltar("izquierda")
                 else:
+                    self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
                     self.saltar("arriba")
 
 
         # Si no se ha pulsado ninguna tecla
         elif self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
-            if not self.numPostura == SPRITE_SALTANDO:
+            if not self.numPostura == SPRITE_SALTANDO or (speed==0 and plataforma!=None):
                 self.numPostura = SPRITE_QUIETO
-                speed = 0
+                
 
 
 
         # Además, si estamos en el aire
         #if self.numPostura == SPRITE_SALTANDO:
 
-        # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
-        #  Para ello, miramos si hay colision con alguna plataforma del grupo
-        plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
-        #  Ademas, esa colision solo nos interesa cuando estamos cayendo
-        #  y solo es efectiva cuando caemos encima, no de lado, es decir,
-        #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
-        if (plataforma != None)  and (plataforma.rect.bottom>self.rect.bottom):
-            print("plataforma")
-            # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
-            #  para poder detectar cuando se cae de ella
-            self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
-            # Lo ponemos como quieto
-            self.numPostura = SPRITE_QUIETO
-            # Y estará quieto en el eje y
-            #speed=0
+        
         self.angle=angle
         self.speed=speed
             # Si no caemos en una plataforma, aplicamos el efecto de la gravedad

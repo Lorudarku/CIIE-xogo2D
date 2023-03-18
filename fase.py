@@ -1,35 +1,21 @@
-# -*- coding: utf-8 -*-
 
+# -*- coding: utf-8 -*-
 import pygame, escena
 from escena import *
 from personajes import *
 from plataforma import Plataforma
 from pygame.locals import *
 from drunken import *
-
 # -------------------------------------------------
 # -------------------------------------------------
 # Constantes
-COLUMNAS = 25
-FILAS = 15
-TILE_SIZE = escena.ALTO_PANTALLA // COLUMNAS
-TILE_TYPES = 16
-nivel = 0
-
-# Los bordes de la pantalla para hacer scroll vertical
-
-img_list = []
-for x in range(TILE_TYPES):
-    img = GestorRecursos.CargarImagen(f'{nivel}.png')
-    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
-    img_list.append(img)
-
+# -------------------------------------------------
+# -------------------------------------------------
+# Los bordes de la pantalla para hacer scroll horizontal
 # -------------------------------------------------
 # Clase Fase
-
 class Fase(Escena):
-    def __init__(self, director, archivoFase):
-
+    def __init__(self, director):
         # Habria que pasarle como parámetro el número de fase, a partir del cual se cargue
         #  un fichero donde este la configuracion de esa fase en concreto, con cosas como
         #   - Nombre del archivo con el decorado
@@ -39,15 +25,12 @@ class Fase(Escena):
         #  etc.
         # Y cargar esa configuracion del archivo en lugar de ponerla a mano, como aqui abajo
         # De esta forma, se podrian tener muchas fases distintas con esta clase
-
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
-        datos = GestorRecursos.CargarArchivoFase(archivoFase)
         # Creamos el decorado y el fondo
         self.decorado = Decorado()
         self.jugador1 = Jugador()
         self.grupoJugadores = pygame.sprite.Group( self.jugador1)
-
         # Ponemos a los jugadores en sus posiciones iniciales
         self.jugador1.establecerPosicion((200, 400))
         
@@ -57,9 +40,7 @@ class Fase(Escena):
         self.grupoPlataformas = pygame.sprite.Group( plataformaSuelo)
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
-
     def update(self, tiempo):
-
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, tiempo)
        
     def dibujar(self, pantalla):
@@ -85,27 +66,10 @@ class Decorado:
         pygame.Surface.blit(self.imagen,cubo,(0, 550, 1200, 15))
         self.rect = self.imagen.get_rect()
         self.rect.bottom = ALTO_PANTALLA
-
         # La subimagen que estamos viendo
         self.rectSubimagen = pygame.Rect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA)
         self.rectSubimagen.left = 0 # El scroll horizontal empieza en la posicion 0 por defecto
-
     def update(self, scrollx):
         self.rectSubimagen.left = scrollx
-
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
-
-class Nivel():
-    def __init__(self):
-        self.obstacultos = []
-    
-    def procesar_datos(self, datos):
-        for y, fila in enumerate(datos):
-            for x, tile in enumerate(fila):
-                if tile >= 0:
-                    img = img_list[tile]
-                    img_rect = img.get_rect()
-                    img_rect.x = x * TILE_SIZE
-                    img_rect.y = y * TILE_SIZE
-                    
