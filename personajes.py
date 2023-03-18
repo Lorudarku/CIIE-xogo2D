@@ -12,7 +12,14 @@ DERECHA = 2
 ARRIBA = 3
 ABAJO = 4
 ESPACIO=5
-
+ESPACIOD=6
+ESPACIOI=7
+ESPACIOAR=8
+ESPACIOAB=9
+ESPACIODAR=10
+ESPACIODAB=11
+ESPACIOIAR=12
+ESPACIOIAB=13
 #Posturas
 SPRITE_QUIETO = 0
 SPRITE_ANDANDO = 1
@@ -160,7 +167,35 @@ class Personaje(MiSprite):
         
         return self.physics.add_vectors(self.angle, self.speed, angle, speed)
      
+    def dash(self,direccion):
+        print("dashieeeeee",direccion)
+        speed = 10
         
+        if direccion==ESPACIOAR:
+            angle=0       
+        
+        elif direccion==ESPACIOAB:
+            angle= math.pi
+            
+        elif direccion==ESPACIOD:
+            angle= math.pi/2
+            
+        elif direccion==ESPACIOI:
+            angle= -math.pi/2
+
+        elif direccion==ESPACIODAR:
+            angle= math.pi/4
+
+        elif direccion==ESPACIODAB:
+            angle= 3*math.pi/4
+
+        elif direccion==ESPACIOIAR:
+            angle= -math.pi/4
+
+        elif direccion==ESPACIOIAB:
+            angle= -3*math.pi/4
+            
+        return self.physics.add_vectors(self.angle, self.speed, angle, speed)
          
     # Metodo base para realizar el movimiento: simplemente se le indica cual va a hacer, y lo almacena
     def mover(self, movimiento):
@@ -231,7 +266,8 @@ class Personaje(MiSprite):
                     self.numPostura = SPRITE_SALTANDO
 
         # Si queremos saltar
-        elif self.movimiento == ESPACIO:
+        #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
+        elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
             self.jumpCount += 1
            
                
@@ -239,17 +275,17 @@ class Personaje(MiSprite):
                 self.numPostura =SPRITE_AGACHADO
 
             elif self.jumpCount>self.maxJumpCount:
-                if self.movimiento==DERECHA: 
+                if self.movimiento==ESPACIOD: 
                     self.mirando = self.movimiento
                     angle,speed=self.saltar("derecha")
-                elif self.movimiento==IZQUIERDA:
+                elif self.movimiento==ESPACIOI:
                     self.mirando = self.movimiento
                     angle,speed=self.saltar("izquierda")
                 else:
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
                     angle,speed=self.saltar("arriba")
             
-
+        
        
         # Si no se ha pulsado ninguna tecla
         elif self.movimiento == QUIETO:
@@ -257,12 +293,15 @@ class Personaje(MiSprite):
             if not self.numPostura == SPRITE_SALTANDO or (speed==0 and plataforma!=None):
                 self.numPostura = SPRITE_QUIETO
                 
-
-
-
+        if (self.numPostura==SPRITE_SALTANDO):
+            if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB):
+                self.dash(self.movimiento)
+        
+        
+        
         # Además, si estamos en el aire
         #if self.numPostura == SPRITE_SALTANDO:
-
+        
         
         self.angle=angle
         self.speed=speed
@@ -295,10 +334,11 @@ class Personaje(MiSprite):
         
 
         self.add_gravity()
+        
         self.moveset(grupoPlataformas)
         
         self.actualizarPostura()
-        print(self.speed)
+        # print(self.speed)
         
 
         
