@@ -18,11 +18,11 @@ nivel = 0
 
 # Los bordes de la pantalla para hacer scroll vertical
 
-img_list = []
-for x in range(TILE_TYPES):
-    img = GestorRecursos.CargarImagen(f'{nivel}.png')
-    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
-    img_list.append(img)
+#img_list = []
+#for x in range(TILE_TYPES):
+#    img = GestorRecursos.CargarImagen(f'{x}.png')
+#    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+#    img_list.append(img)
 
 # -------------------------------------------------
 # Clase Fase
@@ -44,19 +44,20 @@ class Fase(Escena):
         Escena.__init__(self, director)
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
         # Creamos el decorado y el fondo
-        self.decorado = Decorado()
-        self.jugador1 = Jugador()
-        self.grupoJugadores = pygame.sprite.Group( self.jugador1)
+        #self.decorado = Decorado()
+        #self.jugador1 = Jugador()
+        self.grupoJugadores = pygame.sprite.Group()
 
         # Ponemos a los jugadores en sus posiciones iniciales
-        self.jugador1.establecerPosicion((200, 400))
+        #self.jugador1.establecerPosicion((200, 400))
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
-        plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        self.grupoPlataformas = pygame.sprite.Group( plataformaSuelo)
-        self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
-        self.grupoSprites = pygame.sprite.Group( self.jugador1 )
+        #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
+        self.grupoPlataformas = pygame.sprite.Group()
+        self.grupoSpritesDinamicos = pygame.sprite.Group()
+        self.grupoSprites = pygame.sprite.Group()
+        self.grupoEnemigos = pygame.sprite.Group()
 
     def update(self, tiempo):
 
@@ -76,6 +77,31 @@ class Fase(Escena):
                 self.director.salirPrograma()
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
+    
+    def procesar_datos(self, datos):
+       for y, fila in enumerate(datos):
+          for x, tile in enumerate(fila):
+                if tile >= 0 and tile <= 8:
+                    wall = Plataforma()
+                    self.grupoPlataformas.add(wall)
+                if tile >= 9 and tile <= 12:
+                    decoracion = Decorado()
+                    self.grupoDecorado.add(decoracion)
+                if tile == 13:
+                    player = Jugador()
+                    self.grupoEnemigos.add(player)
+                    self.grupoSpritesDinamicos.add(player)
+                    self.grupoSprites.add(player)
+                if tile == 14:
+                    enemy = Jugador()
+                    self.grupoEnemigos.add(enemy)
+                    self.grupoSpritesDinamicos.add(enemy)
+                    self.grupoSprites.add(enemy)
+                if tile == 15:
+                    pass
+                    #item = Item()
+                    #self.grupoItems.add(item)
+                    
        
 class Decorado:
     def __init__(self):
@@ -95,17 +121,3 @@ class Decorado:
 
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
-
-class Nivel():
-    def __init__(self):
-        self.obstacultos = []
-    
-    def procesar_datos(self, datos):
-        for y, fila in enumerate(datos):
-            for x, tile in enumerate(fila):
-                if tile >= 0:
-                    img = img_list[tile]
-                    img_rect = img.get_rect()
-                    img_rect.x = x * TILE_SIZE
-                    img_rect.y = y * TILE_SIZE
-                    
