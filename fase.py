@@ -6,12 +6,17 @@ from personajes import *
 from plataforma import Plataforma
 from pygame.locals import *
 from drunken import *
+from menew import *
+
 # -------------------------------------------------
 # -------------------------------------------------
 # Constantes
 # -------------------------------------------------
 # -------------------------------------------------
+
+
 # Los bordes de la pantalla para hacer scroll horizontal
+
 # -------------------------------------------------
 # Clase Fase
 class Fase(Escena):
@@ -55,6 +60,12 @@ class Fase(Escena):
             # Si se quiere salir, se le indica al director
             if evento.type == pygame.QUIT:
                 self.director.salirPrograma()
+            # Si se pulsa una tecla
+            if evento.type == pygame.KEYDOWN:
+                #Si es la tecla ESCAPE
+                if evento.key == K_ESCAPE:
+                    # Se muestra la pantalla de pausa
+                    self.director.apilarEscena(MenuPausa(self.director))
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
        
@@ -73,3 +84,149 @@ class Decorado:
         self.rectSubimagen.left = scrollx
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
+
+# -------------------------------------------------
+# Clase Menu, la escena en sí
+class Menu(Escena):
+
+    def __init__(self, director):
+        # Llamamos al constructor de la clase padre
+        Escena.__init__(self, director)
+        # Creamos la lista de pantallas
+        self.listaPantallas = []
+        # Creamos las pantallas que vamos a tener
+        #   y las metemos en la lista
+        self.listaPantallas.append(PantallaInicialGUI(self)) #0
+        self.listaPantallas.append(PantallaOpcionesGUI(self)) #1
+        # En que pantalla estamos actualmente
+        self.mostrarPantallaInicial()
+
+    def update(self, *args):
+        return
+
+    def eventos(self, lista_eventos):
+        # Se mira si se quiere salir de esta escena
+        for evento in lista_eventos:
+            # Si se quiere salir, se le indica al director 
+            if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
+                self.director.salirPrograma()
+        # Se pasa la lista de eventos a la pantalla actual
+        self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
+
+    def dibujar(self, pantalla):
+        self.listaPantallas[self.pantallaActual].dibujar(pantalla)
+
+    #--------------------------------------
+    # Metodos propios del menu
+
+    def salirPrograma(self):
+        self.director.salirPrograma()
+
+    def ejecutarJuego(self):    
+        fase = Fase(self.director)
+        self.director.apilarEscena(fase)
+
+    def mostrarPantallaOpciones(self, ingame=False):
+        if ingame:
+            self.pantallaActual = 2
+        else:
+            self.pantallaActual = 1
+
+    def mostrarPantallaInicial(self):
+        self.pantallaActual = 0
+    
+    def subirVolumen(self):
+        volumen = pygame.mixer.music.get_volume() + 0.1
+        #redondeamos el volumen a 1 decimal
+        volumen = round(volumen,1)
+        if volumen >= 1:
+            volumen = 1
+        pygame.mixer.music.set_volume(volumen)
+        self.listaPantallas[1].textList[2].actualizar(volumen*10)
+
+    def bajarVolumen(self):
+        volumen = pygame.mixer.music.get_volume() - 0.1
+        #redondeamos el volumen a 1 decimal
+        volumen = round(volumen,1)
+        if volumen <= 0:
+            volumen = 0
+        pygame.mixer.music.set_volume(volumen)
+        self.listaPantallas[1].textList[2].actualizar(volumen*10)
+
+class MenuPausa(Escena):
+    
+        def __init__(self, director):
+            # Llamamos al constructor de la clase padre
+            Escena.__init__(self, director)
+            # Creamos la lista de pantallas
+            self.listaPantallas = []
+            # Creamos las pantallas que vamos a tener
+            #   y las metemos en la lista
+            self.listaPantallas.append(PantallaPausaGUI(self)) #0
+            # En que pantalla estamos actualmente
+            self.mostrarPantallaOpcionesPausa()
+    
+        def update(self, *args):
+            return
+    
+        def eventos(self, lista_eventos):
+            # Se mira si se quiere salir de esta escena
+            for evento in lista_eventos:
+                # Si se quiere salir, se le indica al director 
+                if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
+                    self.director.salirPrograma()
+                #Si se pulsa una tecla
+                if evento.type == pygame.KEYDOWN:
+                    #Si esa tecla es ESC
+                    if evento.key == pygame.K_ESCAPE:
+                        #Si estamos en el menu
+                        if self.pantallaActual == 0:
+                            #Se sale del programa
+                            self.director.salirPrograma()
+                        #Si estamos en las opciones
+                        if self.pantallaActual == 1:
+                            #Se vuelve al menu
+                            self.mostrarPantallaPausa()
+            # Se pasa la lista de eventos a la pantalla actual
+            self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
+    
+        def dibujar(self, pantalla):
+            self.listaPantallas[self.pantallaActual].dibujar(pantalla)
+    
+        #--------------------------------------
+        # Metodos propios del menu de pausa
+    
+        def salirPrograma(self):
+            self.director.salirPrograma()
+    
+        def mostrarPantallaOpcionesPausa(self, ingame=False):
+            self.pantallaActual = 0
+
+        def volverAJugar(self):
+            self.director.salirEscena()
+
+        def volverMenu(self):
+            #Miramos el tamaño de la pila y desapilamos hasta que quede solo 1 elemento
+            while len(self.director.pila) > 0:    
+                self.director.salirEscena()
+            #Creamos una nueva escena y la apilamos
+            menu = Menu(self.director)
+            self.director.apilarEscena(menu)
+
+        def subirVolumen(self):
+            volumen = pygame.mixer.music.get_volume() + 0.1
+            #redondeamos el volumen a 1 decimal
+            volumen = round(volumen,1)
+            if volumen >= 1:
+                volumen = 1
+            pygame.mixer.music.set_volume(volumen)
+            self.listaPantallas[0].textList[2].actualizar(volumen*10)
+
+        def bajarVolumen(self):
+            volumen = pygame.mixer.music.get_volume() - 0.1
+            #redondeamos el volumen a 1 decimal
+            volumen = round(volumen,1)
+            if volumen <= 0:
+                volumen = 0
+            pygame.mixer.music.set_volume(volumen)
+            self.listaPantallas[0].textList[2].actualizar(volumen*10)

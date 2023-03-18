@@ -5,7 +5,6 @@ import pyganim
 from pygame.locals import *
 from escena import *
 from gestorRecursos import *
-from fase import Fase
 from math import *
 from random import randint
 # -------------------------------------------------
@@ -97,7 +96,6 @@ class ReactiveButtonSalir(ReactiveButton):
 ##### BOTONES PANTALLA OPCIONES #####
 class ReactiveButtonVolver(ReactiveButton):
     def __init__(self, pantalla, ingame=False):
-        self.ingame = ingame
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 20)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
             (80, 30),"Volver",fuente,"#fff5b9","Yellow",pantalla)
@@ -106,19 +104,16 @@ class ReactiveButtonVolver(ReactiveButton):
         self.rect = self.image.get_rect(center=(80, 30))
         
     def accion(self):
-        if self.ingame:
-            self.pantalla.menu.mostrarPantallaJuego()
-        else:
-            self.pantalla.menu.mostrarPantallaInicial()
+        self.pantalla.menu.mostrarPantallaInicial()
 
 class ReactiveButtonMusicaMas(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
-            (700, 250),">",fuente,"#abdbff","Blue",pantalla)
+            (750, 350),">",fuente,"#abdbff","Blue",pantalla)
         #Reescalamos la imagen y el rectangulo
         self.image = pygame.transform.scale(self.image, (40,40))
-        self.rect = self.image.get_rect(center=(700, 250))
+        self.rect = self.image.get_rect(center=(750, 350))
         
     def accion(self):
         self.pantalla.menu.subirVolumen()
@@ -127,13 +122,37 @@ class ReactiveButtonMusicaMenos(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
-            (600, 250),"<",fuente,"#abdbff","Blue",pantalla)
+            (650, 350),"<",fuente,"#abdbff","Blue",pantalla)
         #Reescalamos la imagen y el rectangulo
         self.image = pygame.transform.scale(self.image, (40,40))
-        self.rect = self.image.get_rect(center=(600, 250))
+        self.rect = self.image.get_rect(center=(650, 350))
         
     def accion(self):
         self.pantalla.menu.bajarVolumen()
+
+class ReactiveButtonContinuar(ReactiveButton):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 35)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (600, 250),"Continuar",fuente,"#d7fcd4","Green",pantalla)
+        #Reescalamos la imagen y el rectangulo
+        self.image = pygame.transform.scale(self.image, (380,80))
+        self.rect = self.image.get_rect(center=(600, 250))
+        
+    def accion(self):
+            self.pantalla.menu.volverAJugar()
+
+class ReactiveButtonVolverMenu(ReactiveButton):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 35)
+        ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
+            (600, 450),"Volver al menu",fuente,"#fff5b9","Yellow",pantalla)
+        #Reescalamos la imagen y el rectangulo
+        self.image = pygame.transform.scale(self.image, (500,80))
+        self.rect = self.image.get_rect(center=(600, 450))
+        
+    def accion(self):
+        self.pantalla.menu.volverMenu()
 
 # -------------------------------------------------
 # Clase texto plano
@@ -159,29 +178,29 @@ class OpcionesText(Text):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 80)
         self.text = fuente.render("Opciones", True, (255,255,255))
-        Text.__init__(self, pantalla, self.text, (550,80))
+        Text.__init__(self, pantalla, self.text, (600,80))
 
 class MusicaText(Text):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         self.text = fuente.render("Musica", True, "#6fc1ff")
-        Text.__init__(self, pantalla, self.text, (430,250))
+        Text.__init__(self, pantalla, self.text, (480,350))
 
 
 class MedidorMusica(Text):
     def __init__(self, pantalla, medidor):
         #Convertrimos el valor del medidor a string
-        medidor = str(floor(medidor))
+        medidor = str(round(medidor*10,0))
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
-        self.text = fuente.render(medidor, True, "Orange")
-        Text.__init__(self, pantalla, self.text, (650,250))
+        self.text = fuente.render(medidor[0], True, "Orange")
+        Text.__init__(self, pantalla, self.text, (700,350))
 
     def actualizar(self, medidor):
         #Convertrimos el valor del medidor a string
         medidor = str(floor(medidor))
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         self.text = fuente.render(medidor, True, "Orange")
-        Text.__init__(self, self.pantalla, self.text, (650,250))
+        Text.__init__(self, self.pantalla, self.text, (700,350))
 
 # -------------------------------------------------
 # Clase PantallaGUI y las distintas pantallas
@@ -259,7 +278,7 @@ class PantallaInicialGUI(PantallaGUI):
         numeroCancion = randint(0,2)
         #Cargamos la musica inicial
         GestorRecursos.CargarSonido(canciones[numeroCancion],True)
-        pygame.mixer.music.set_volume(0) #volumen inicial
+        pygame.mixer.music.set_volume(round(0.1,1)) #volumen inicial
         pygame.mixer.music.play()
 
         PantallaGUI.__init__(self, menu, 'fondoMenu.png')
@@ -275,26 +294,22 @@ class PantallaInicialGUI(PantallaGUI):
         self.elementosGUI.append(botonOpciones)
         self.elementosGUI.append(botonSalir)
       
-        
+#Pantalla de opciones desde el menu principal     
 class PantallaOpcionesGUI(PantallaGUI):
-    def __init__(self, menu, ingame = False):
+    def __init__(self, menu):
         #Cargamos encima de la pantalla actual el fondo de opciones
-        if ingame: 
-            PantallaGUI.__init__(self, menu, 'rectangulo-semitransparente.png') #No se carga el fondo del menu por encima
-            botonVolver = ReactiveButtonVolver(self, True)
-        else:
-            PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png') #Se carga el fondo del menu y despues el rectangulo semitransparente
-            #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
-            botonVolver = ReactiveButtonVolver(self, False)
+        PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png') #Se carga el fondo del menu y despues el rectangulo semitransparente
+        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
+        
 
-  
         # Creamos los botones y los metemos en la lista
-        #El boton de volver es distinto si estamos en el menu o en el juego, por eso se crea arriba
+        botonVolver = ReactiveButtonVolver(self, False)
         botonMusicaMenos = ReactiveButtonMusicaMenos(self)
         botonMusicaMas = ReactiveButtonMusicaMas(self)
         self.elementosGUI.append(botonVolver)
         self.elementosGUI.append(botonMusicaMenos)
         self.elementosGUI.append(botonMusicaMas)
+
         # Creamos el texto y lo metemos en la lista
         textoOpciones = OpcionesText(self)
         textoMusica = MusicaText(self)
@@ -303,77 +318,25 @@ class PantallaOpcionesGUI(PantallaGUI):
         self.textList.append(textoMusica)    
         self.textList.append(medidorMusica)
                
-# -------------------------------------------------
-# Clase Menu, la escena en sí
+#Pantalla de opciones desde el juego
+class PantallaPausaGUI(PantallaGUI):
+    def __init__(self, menu):
+        #Cargamos encima de la pantalla actual el fondo de opciones
+        PantallaGUI.__init__(self, menu, 'fondoPausa.png', 'rectangulo-semitransparente.png') #No se carga el fondo del menu por encima
+        # Creamos los botones y los metemos en la lista
+        botonContinuar = ReactiveButtonContinuar(self)
+        botonVolverMenu = ReactiveButtonVolverMenu(self)
+        botonMusicaMas = ReactiveButtonMusicaMas(self)
+        botonMusicaMenos = ReactiveButtonMusicaMenos(self)
+        self.elementosGUI.append(botonContinuar)
+        self.elementosGUI.append(botonVolverMenu)
+        self.elementosGUI.append(botonMusicaMas)
+        self.elementosGUI.append(botonMusicaMenos)
 
-class Menu(Escena):
-
-    def __init__(self, director):
-        # Llamamos al constructor de la clase padre
-        Escena.__init__(self, director)
-        # Creamos la lista de pantallas
-        self.listaPantallas = []
-        # Creamos las pantallas que vamos a tener
-        #   y las metemos en la lista
-        self.listaPantallas.append(PantallaInicialGUI(self)) #0
-        self.auxBool = True
-        self.listaPantallas.append(PantallaOpcionesGUI(self, False)) #1
-        self.listaPantallas.append(PantallaOpcionesGUI(self, True)) #2
-        # En que pantalla estamos actualmente
-        self.mostrarPantallaInicial()
-
-    def update(self, *args):
-        return
-
-    def eventos(self, lista_eventos):
-        # Se mira si se quiere salir de esta escena
-        for evento in lista_eventos:
-            # Si se quiere salir, se le indica al director 
-            if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
-                self.director.salirPrograma()
-
-        # Se pasa la lista de eventos a la pantalla actual
-        self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
-
-    def dibujar(self, pantalla):
-        self.listaPantallas[self.pantallaActual].dibujar(pantalla)
-
-    #--------------------------------------
-    # Metodos propios del menu
-
-    def salirPrograma(self):
-        self.director.salirPrograma()
-
-    def ejecutarJuego(self):    
-        fase = Fase(self.director)
-        self.director.apilarEscena(fase)
-
-    def mostrarPantallaOpciones(self, ingame=False):
-        if ingame:
-            self.pantallaActual = 2
-        else:
-            self.pantallaActual = 1
-
-    def mostrarPantallaInicial(self):
-        if self.auxBool:
-            self.subirVolumen()
-            self.auxBool = False
-        self.pantallaActual = 0
-    
-    def subirVolumen(self):
-        volumen = pygame.mixer.music.get_volume() + 0.1
-        #redondeamos el volumen a 1 decimal
-        volumen = round(volumen,1)
-        if volumen >= 1:
-            volumen = 1
-        pygame.mixer.music.set_volume(volumen)
-        self.listaPantallas[1].textList[2].actualizar(volumen*10)
-
-    def bajarVolumen(self):
-        volumen = pygame.mixer.music.get_volume() - 0.1
-        #redondeamos el volumen a 1 decimal
-        volumen = round(volumen,1)
-        if volumen <= 0:
-            volumen = 0
-        pygame.mixer.music.set_volume(volumen)
-        self.listaPantallas[1].textList[2].actualizar(volumen*10)
+        # Creamos el texto y lo metemos en la lista
+        textoOpciones = OpcionesText(self)
+        textoMusica = MusicaText(self)
+        medidorMusica = MedidorMusica(self, pygame.mixer.music.get_volume())
+        self.textList.append(textoOpciones)
+        self.textList.append(textoMusica)    
+        self.textList.append(medidorMusica)
