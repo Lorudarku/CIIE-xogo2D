@@ -199,16 +199,11 @@ class Personaje(MiSprite):
          
     # Metodo base para realizar el movimiento: simplemente se le indica cual va a hacer, y lo almacena
     def mover(self, movimiento):
-        if self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
-            # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
-                self.movimiento = QUIETO
-        else:
-            self.movimiento = movimiento
+        self.movimiento = movimiento
 
     def moveset(self,grupoPlataformas):
         angle=self.angle
         speed=self.speed
-
         # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
         #  Para ello, miramos si hay colision con alguna plataforma del grupo
         plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
@@ -216,7 +211,7 @@ class Personaje(MiSprite):
         #  y solo es efectiva cuando caemos encima, no de lado, es decir,
         #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
         if (plataforma != None)  and (plataforma.rect.bottom>self.rect.bottom):
-           
+        
             # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
             #  para poder detectar cuando se cae de ella
             self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
@@ -224,78 +219,85 @@ class Personaje(MiSprite):
             # Y estará quieto en el eje y
             speed=0
 
-        # Si vamos a la izquierda o a la derecha        
-        if (self.movimiento == IZQUIERDA):
+        if self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
+            # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
             
-            self.mirando = self.movimiento
-            #si no está agachado AKA cargando el salto, se mueve
-            if not self.numPostura==SPRITE_AGACHADO:
-                    angle=-math.pi/2
-                    speed=self.walkSpeed
-            else :
-                angle,speed=self.saltar("izquierda")
-                self.numPostura =SPRITE_SALTANDO
-
-             # Si no estamos en el aire
-            if self.numPostura != SPRITE_SALTANDO:
-                # La postura actual sera estar caminando
-                self.numPostura = SPRITE_ANDANDO
-                # Ademas, si no estamos encima de ninguna plataforma, caeremos
-                if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
-                    self.numPostura = SPRITE_SALTANDO   
-
-        elif (self.movimiento == DERECHA):
+            if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB):
+                self.dash(self.movimiento)
+            print(self.movimiento)  
+            self.movimiento = QUIETO  
+        else:
             
-            self.mirando = self.movimiento
-            #si no está agachado AKA cargando el salto, se mueve
-            if not self.numPostura== SPRITE_AGACHADO:
-             # Esta mirando hacia ese lado
-                angle=math.pi/2
-                speed=self.walkSpeed
-            else:
-                angle,speed=self.saltar("derecha")
-                self.numPostura =SPRITE_SALTANDO
 
-            
-            # Si no estamos en el aire
-            if self.numPostura != SPRITE_SALTANDO:
-                # La postura actual sera estar caminando
-                self.numPostura = SPRITE_ANDANDO
-                # Ademas, si no estamos encima de ninguna plataforma, caeremos
-                if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
-                    self.numPostura = SPRITE_SALTANDO
-
-        # Si queremos saltar
-        #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
-        elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
-            self.jumpCount += 1
-           
-               
-            if self.numPostura != SPRITE_AGACHADO:
-                self.numPostura =SPRITE_AGACHADO
-
-            elif self.jumpCount>self.maxJumpCount:
-                if self.movimiento==ESPACIOD: 
-                    self.mirando = self.movimiento
-                    angle,speed=self.saltar("derecha")
-                elif self.movimiento==ESPACIOI:
-                    self.mirando = self.movimiento
+            # Si vamos a la izquierda o a la derecha        
+            if (self.movimiento == IZQUIERDA):
+                
+                self.mirando = self.movimiento
+                #si no está agachado AKA cargando el salto, se mueve
+                if not self.numPostura==SPRITE_AGACHADO:
+                        angle=-math.pi/2
+                        speed=self.walkSpeed
+                else :
                     angle,speed=self.saltar("izquierda")
+                    self.numPostura =SPRITE_SALTANDO
+
+                # Si no estamos en el aire
+                if self.numPostura != SPRITE_SALTANDO:
+                    # La postura actual sera estar caminando
+                    self.numPostura = SPRITE_ANDANDO
+                    # Ademas, si no estamos encima de ninguna plataforma, caeremos
+                    if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
+                        self.numPostura = SPRITE_SALTANDO   
+
+            elif (self.movimiento == DERECHA):
+                
+                self.mirando = self.movimiento
+                #si no está agachado AKA cargando el salto, se mueve
+                if not self.numPostura== SPRITE_AGACHADO:
+                # Esta mirando hacia ese lado
+                    angle=math.pi/2
+                    speed=self.walkSpeed
                 else:
-                    self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
-                    angle,speed=self.saltar("arriba")
+                    angle,speed=self.saltar("derecha")
+                    self.numPostura =SPRITE_SALTANDO
+
+                
+                # Si no estamos en el aire
+                if self.numPostura != SPRITE_SALTANDO:
+                    # La postura actual sera estar caminando
+                    self.numPostura = SPRITE_ANDANDO
+                    # Ademas, si no estamos encima de ninguna plataforma, caeremos
+                    if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
+                        self.numPostura = SPRITE_SALTANDO
+
+            # Si queremos saltar
+            #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
+            elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
+                self.jumpCount += 1
+            
+                
+                if self.numPostura != SPRITE_AGACHADO:
+                    self.numPostura =SPRITE_AGACHADO
+
+                elif self.jumpCount>self.maxJumpCount:
+                    if self.movimiento==ESPACIOD: 
+                        self.mirando = self.movimiento
+                        angle,speed=self.saltar("derecha")
+                    elif self.movimiento==ESPACIOI:
+                        self.mirando = self.movimiento
+                        angle,speed=self.saltar("izquierda")
+                    else:
+                        self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
+                        angle,speed=self.saltar("arriba")
+                
             
         
-       
-        # Si no se ha pulsado ninguna tecla
-        elif self.movimiento == QUIETO:
+            # Si no se ha pulsado ninguna tecla
+        if self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
             if not self.numPostura == SPRITE_SALTANDO or (speed==0 and plataforma!=None):
                 self.numPostura = SPRITE_QUIETO
-                
-        if (self.numPostura==SPRITE_SALTANDO):
-            if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB):
-                self.dash(self.movimiento)
+                    
         
         
         
