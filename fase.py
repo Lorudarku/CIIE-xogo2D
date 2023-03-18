@@ -175,18 +175,9 @@ class MenuPausa(Escena):
                 # Si se quiere salir, se le indica al director 
                 if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
                     self.director.salirPrograma()
-                #Si se pulsa una tecla
                 if evento.type == pygame.KEYDOWN:
-                    #Si esa tecla es ESC
-                    if evento.key == pygame.K_ESCAPE:
-                        #Si estamos en el menu
-                        if self.pantallaActual == 0:
-                            #Se sale del programa
-                            self.director.salirPrograma()
-                        #Si estamos en las opciones
-                        if self.pantallaActual == 1:
-                            #Se vuelve al menu
-                            self.mostrarPantallaPausa()
+                    if evento.key == K_ESCAPE:
+                        self.director.salirEscena()
             # Se pasa la lista de eventos a la pantalla actual
             self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
     
