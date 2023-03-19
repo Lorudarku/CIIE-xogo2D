@@ -41,7 +41,7 @@ class Fase(Escena):
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
-        plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
+        plataformaSuelo = Plataforma(pygame.Rect(0, 540, 600, 40))
         self.grupoPlataformas = pygame.sprite.Group( plataformaSuelo)
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
@@ -53,6 +53,7 @@ class Fase(Escena):
         self.decorado.dibujar(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
+        self.grupoPlataformas.draw(pantalla)
     
     def eventos(self, lista_eventos):
         # Miramos a ver si hay algun evento de salir del programa
@@ -72,9 +73,9 @@ class Fase(Escena):
 class Decorado:
     def __init__(self):
         self.imagen = GestorRecursos.CargarImagen('backgroundTest.png', -1)
-        cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
+        #cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
         self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
-        pygame.Surface.blit(self.imagen,cubo,(0, 550, 1200, 15))
+        #pygame.Surface.blit(self.imagen,cubo,(0, 550))
         self.rect = self.imagen.get_rect()
         self.rect.bottom = ALTO_PANTALLA
         # La subimagen que estamos viendo

@@ -93,6 +93,7 @@ class Personaje(MiSprite):
         MiSprite.__init__(self);
 
         # Se carga la hoja
+        self.dashes=0
         self.hoja = GestorRecursos.CargarImagen(archivoImagen,-1)
         self.hoja = self.hoja.convert_alpha()
         # El movimiento que esta realizando
@@ -135,17 +136,7 @@ class Personaje(MiSprite):
 
     def add_gravity(self):
         self.angle, self.speed = self.physics.add_vectors(self.angle, self.speed, self.physics.gravity[0], self.physics.gravity[1])
-
-    def prueba_salto(self):
-        print("salteeeeee")
-            
-        speed = (4)
-        angle=0
-        
-        self.numPostura=SPRITE_SALTANDO
-        self.jumpCount = 0
-        return self.physics.add_vectors(self.angle, self.speed, angle, speed)
-     
+  
         
     def saltar(self,direccion):
         print("salteeeeee")
@@ -194,7 +185,46 @@ class Personaje(MiSprite):
             angle= -3*math.pi/4
             
         return angle,speed
-         
+
+    def checarColisionAbajo(self, plataforma):
+        #if (self.rect.bottom > plataforma.rect.top and self.rect.left>plataforma.rect.left and self.rect.right<plataforma.rect.right):
+         #   return True
+        
+        v1x=self.rect.bottomleft[0]-plataforma.rect.center[0]
+        v1y=self.rect.bottomleft[1]-plataforma.rect.center[1]
+        
+        #diagonal derecha plataforma
+        v2x=plataforma.rect.topright[0]-plataforma.rect.center[0]
+        v2y=plataforma.rect.topright[1]-plataforma.rect.center[1]
+        
+        pendienteSelfL= math.atan(v1x/v1y)
+        pendientePlatL= math.atan(v2x/v2y)
+        print("pendientePlatL",pendientePlatL)
+        print("pendienteSelfL",pendienteSelfL)
+        
+        #if(self.rect.bottom > plataforma.rect.top and ):
+         #   return True
+
+    #comprueba las colisiones del personaje devolviendo una tupla de cuatro booleanos (por las cuatro dirrecciones)
+    def checkCollisions(self,grupoPlataformas):
+        plataformas = pygame.sprite.spritecollide(self, grupoPlataformas)
+        colisiones=(False,False,False,False) #([0]ABAJO, [1]ARRIBA, [2]DERECHA, [3]IZQUIERDA)
+        if (plataformas != None):
+            for plataforma in plataformas:
+                self.rect.c
+                if (self.checarColisionAbajo(plataforma)): #abajo
+                    colisiones[0]=True
+                elif (plataforma.rect.bottom>self.rect.top): #arriba
+                    colisiones[1]=True
+                elif (plataforma.rect.left>self.rect.right): #derecha
+                    colisiones[2]=True
+                elif (plataforma.rect.right>self.rect.left): #izquierda
+                    colisiones[3]=True
+            
+        return colisiones
+            
+               
+        
     # Metodo base para realizar el movimiento: simplemente se le indica cual va a hacer, y lo almacena
     def mover(self, movimiento):
         self.movimiento = movimiento
@@ -205,6 +235,7 @@ class Personaje(MiSprite):
         # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
         #  Para ello, miramos si hay colision con alguna plataforma del grupo
         plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
+        
         #  Ademas, esa colision solo nos interesa cuando estamos cayendo
         #  y solo es efectiva cuando caemos encima, no de lado, es decir,
         #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
@@ -213,6 +244,7 @@ class Personaje(MiSprite):
             # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
             #  para poder detectar cuando se cae de ella
             self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
+            self.checarColisionAbajo(plataforma)
             # Lo ponemos como quieto
             # Y estará quieto en el eje y
             speed=0
@@ -220,9 +252,8 @@ class Personaje(MiSprite):
         if self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
             # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
             
-            if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB):
-                angle,speed=self.dash(self.movimiento)
-            print(self.movimiento)  
+            if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB) and self.dashes>0:
+                angle,speed=self.dash(self.movimiento)  
             self.movimiento = QUIETO  
         else:
             
