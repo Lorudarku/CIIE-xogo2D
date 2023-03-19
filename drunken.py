@@ -33,6 +33,10 @@ class Jugador(Personaje):
             Personaje.mover(self,IZQUIERDA)
         elif teclasPulsadas[derecha]:
             Personaje.mover(self,DERECHA)
+        elif teclasPulsadas[abajo]:
+            Personaje.mover(self,ABAJO)
+        elif teclasPulsadas[arriba]:
+            Personaje.mover(self,ARRIBA)
         else:
             Personaje.mover(self,QUIETO)
 

@@ -41,7 +41,7 @@ class Fase(Escena):
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
-        plataformaSuelo = Plataforma(pygame.Rect(0, 540, 600, 40))
+        plataformaSuelo = Plataforma(pygame.Rect(20, 530, 600, 100))
         self.grupoPlataformas = pygame.sprite.Group( plataformaSuelo)
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
