@@ -8,6 +8,9 @@ import pyganim, PIL
 # -------------------------------------------------
 # Clase GestorRecursos
 
+COLS = 25
+ROWS = 15
+
 # En este caso se implementa como una clase vacía, solo con métodos de clase
 class GestorRecursos(object):
     recursos = {}
@@ -110,7 +113,7 @@ class GestorRecursos(object):
             cls.recursos[nombre] = sound
             # Se devuelve
             return sound
-
+    
     @classmethod
     def CargarArchivoFase(cls, nombre):
         # Si el nombre de archivo está entre los recursos ya cargados
