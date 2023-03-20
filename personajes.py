@@ -277,7 +277,7 @@ class Personaje(MiSprite):
         
         
         if (self.rect.right > plataforma.rect.left > self.rect.left 
-                and (plataforma.rect.top < self.rect.top and self.rect.bottom < plataforma.rect.bottom 
+                and (plataforma.rect.top <= self.rect.top and self.rect.bottom < plataforma.rect.bottom 
                     or plataforma.rect.center[1] >  self.rect.bottomright[1] > plataforma.rect.top and pendienteSelfL>=pendientePlatL
                     or plataforma.rect.center[1] < self.rect.topright[1] < plataforma.rect.bottom and pendienteSelfR<=pendientePlatR
                 ) 
@@ -312,7 +312,7 @@ class Personaje(MiSprite):
         
         
         if (self.rect.left < plataforma.rect.right < self.rect.right 
-                and (plataforma.rect.top < self.rect.top and self.rect.bottom < plataforma.rect.bottom 
+                and (plataforma.rect.top <= self.rect.top and self.rect.bottom < plataforma.rect.bottom 
                     or plataforma.rect.center[1] >  self.rect.bottomleft[1] > plataforma.rect.top and pendienteSelfL<=pendientePlatL
                     or plataforma.rect.center[1] < self.rect.topleft[1] < plataforma.rect.bottom and pendienteSelfR>=pendientePlatR
                 ) 
