@@ -345,7 +345,7 @@ class Menu(Escena):
         self.director.salirPrograma()
 
     def ejecutarJuego(self):    
-        fase = Fase(self.director)
+        fase = Fase(self.director, 'level_data0.csv')
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):

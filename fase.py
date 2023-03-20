@@ -18,11 +18,11 @@ nivel = 0
 
 # Los bordes de la pantalla para hacer scroll vertical
 
-#img_list = []
-#for x in range(TILE_TYPES):
-#    img = GestorRecursos.CargarImagen(f'{x}.png')
-#    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
-#    img_list.append(img)
+img_list = []
+for x in range(TILE_TYPES):
+    img = GestorRecursos.CargarImagen(f'{x}.png')
+    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+    img_list.append(img)
 
 # -------------------------------------------------
 # Clase Fase
@@ -43,6 +43,7 @@ class Fase(Escena):
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
+        #print(datos)
         # Creamos el decorado y el fondo
         #self.decorado = Decorado()
         #self.jugador1 = Jugador()
@@ -77,7 +78,7 @@ class Fase(Escena):
                 self.director.salirPrograma()
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
-    
+    '''
     def procesar_datos(self, datos):
        for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
@@ -101,7 +102,7 @@ class Fase(Escena):
                     pass
                     #item = Item()
                     #self.grupoItems.add(item)
-                    
+       '''             
        
 class Decorado:
     def __init__(self):
