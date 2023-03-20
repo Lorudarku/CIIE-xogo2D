@@ -3,6 +3,10 @@ import pygame
 
 ANCHO_PANTALLA = 1200
 ALTO_PANTALLA = 720
+COLUMNAS = 25
+FILAS = 16
+TILE_SIZE = ANCHO_PANTALLA // COLUMNAS
+TILE_TYPES = 16
 
 # -------------------------------------------------
 # Clase Escena con lo metodos abstractos

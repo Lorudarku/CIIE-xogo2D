@@ -4,8 +4,7 @@ import pygame, sys, os, csv
 from pygame.locals import *
 import pyganim, PIL
 
-COLUMNAS = 25
-FILAS = 15
+
 # -------------------------------------------------
 # Clase GestorRecursos
 
@@ -121,11 +120,15 @@ class GestorRecursos(object):
         # Si no ha sido cargado anteriormente
         else:
             # Se carga el recurso indicando el nombre de su carpeta
+            filas = 16
+            columnas = 25
             fullname = os.path.join('niveles', nombre)
             datos = []
-            for cols in range(FILAS):
-                r = [-1] * COLUMNAS
+            
+            for cols in range(filas):
+                r = [-1] * columnas
                 datos.append(r)
+                
             with open(fullname, newline = '') as csvfile:
                 reader = csv.reader(csvfile, delimiter = ',')
                 for x, cols in enumerate(reader):

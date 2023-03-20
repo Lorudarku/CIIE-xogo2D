@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import pygame, escena
+import pygame,escena
 from escena import *
 from personajes import *
 from plataforma import Plataforma
@@ -10,20 +10,16 @@ from drunken import *
 # -------------------------------------------------
 # -------------------------------------------------
 # Constantes
-COLUMNAS = 25
-FILAS = 15
-TILE_SIZE = escena.ALTO_PANTALLA // COLUMNAS
-TILE_TYPES = 16
 nivel = 0
 
 # Los bordes de la pantalla para hacer scroll vertical
-
+'''
 img_list = []
 for x in range(TILE_TYPES):
     img = GestorRecursos.CargarImagen(f'{x}.png')
     img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
     img_list.append(img)
-
+'''
 # -------------------------------------------------
 # Clase Fase
 
@@ -45,12 +41,12 @@ class Fase(Escena):
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
         #print(datos)
         # Creamos el decorado y el fondo
-        #self.decorado = Decorado()
-        #self.jugador1 = Jugador()
+        self.decorado = Decorado()
+        self.jugador1 = Jugador()
         self.grupoJugadores = pygame.sprite.Group()
 
         # Ponemos a los jugadores en sus posiciones iniciales
-        #self.jugador1.establecerPosicion((200, 400))
+        self.jugador1.establecerPosicion((200, 400))
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
@@ -59,6 +55,36 @@ class Fase(Escena):
         self.grupoSpritesDinamicos = pygame.sprite.Group()
         self.grupoSprites = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
+        self.procesar_datos(datos)
+    
+    def procesar_datos(self, datos):
+       for y, fila in enumerate(datos):
+          for x, tile in enumerate(fila):
+                if tile >= 0:
+                    #tile_data = ()
+                    if tile >= 0 and tile <= 8:
+                        wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
+                        self.grupoPlataformas.add(wall)
+                    if tile >= 9 and tile <= 12:
+                        pass
+                        decoracion = Decorado(f'{tile}.png') #tile_data)
+                        self.grupoDecorado.add(decoracion)
+                    if tile == 13:
+                        pass
+                        jugador1 = Jugador()
+                        self.grupoEnemigos.add(jugador1)
+                        self.grupoSpritesDinamicos.add(jugador1)
+                        self.grupoSprites.add(jugador1)
+                    if tile == 14:
+                        pass
+                        enemy = Jugador()
+                        self.grupoEnemigos.add(enemy)
+                        self.grupoSpritesDinamicos.add(enemy)
+                        self.grupoSprites.add(enemy)
+                    if tile == 15:
+                        pass
+                        #item = Item()
+                        #self.grupoItems.add(item)
 
     def update(self, tiempo):
 
@@ -67,8 +93,10 @@ class Fase(Escena):
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
+        self.grupoPlataformas.draw(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
+        
     
     def eventos(self, lista_eventos):
         # Miramos a ver si hay algun evento de salir del programa
@@ -78,31 +106,8 @@ class Fase(Escena):
                 self.director.salirPrograma()
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
-    '''
-    def procesar_datos(self, datos):
-       for y, fila in enumerate(datos):
-          for x, tile in enumerate(fila):
-                if tile >= 0 and tile <= 8:
-                    wall = Plataforma()
-                    self.grupoPlataformas.add(wall)
-                if tile >= 9 and tile <= 12:
-                    decoracion = Decorado()
-                    self.grupoDecorado.add(decoracion)
-                if tile == 13:
-                    player = Jugador()
-                    self.grupoEnemigos.add(player)
-                    self.grupoSpritesDinamicos.add(player)
-                    self.grupoSprites.add(player)
-                if tile == 14:
-                    enemy = Jugador()
-                    self.grupoEnemigos.add(enemy)
-                    self.grupoSpritesDinamicos.add(enemy)
-                    self.grupoSprites.add(enemy)
-                if tile == 15:
-                    pass
-                    #item = Item()
-                    #self.grupoItems.add(item)
-       '''             
+   
+      
        
 class Decorado:
     def __init__(self):
