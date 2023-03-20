@@ -58,15 +58,12 @@ class Beer(PickUp):
             jugador.dashes+=1
             self.cooldown=100
 
-    
-
-
     def update(self,jugador, tiempo):
         if self.cooldown>0:
             self.cooldown-=1
             self.numPostura=POS2
         else:
             self.numPostura=POS1
-        self.checkColisions(jugador)
+            self.checkColisions(jugador)
         PickUp.update(self,tiempo)
         return   

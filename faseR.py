@@ -50,9 +50,18 @@ class Fase(Escena):
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
+    
+    def actualizarScroll(self,jugador1):
+        if jugador1.posicion[1]<self.decorado.rectSubimagen.top:
+            self.decorado.update("up")
+        elif jugador1.posicion[1]>self.decorado.rectSubimagen.bottom:
+            self.decorado.update("down")
+
     def update(self, tiempo):
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
+        self.actualizarScroll(self.jugador1)
+    
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
@@ -78,17 +87,22 @@ class Fase(Escena):
        
 class Decorado:
     def __init__(self):
-        self.imagen = GestorRecursos.CargarImagen('backgroundTest.png', -1)
+        self.imagen = GestorRecursos.CargarImagen('backgroundTest2.png', -1)
         #cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
-        self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
+        self.imagen = pygame.transform.scale(self.imagen, ((ANCHO_PANTALLA, ALTO_PANTALLA)))
         #pygame.Surface.blit(self.imagen,cubo,(0, 550))
         self.rect = self.imagen.get_rect()
         self.rect.bottom = ALTO_PANTALLA
         # La subimagen que estamos viendo
         self.rectSubimagen = pygame.Rect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA)
-        self.rectSubimagen.left = 0 # El scroll horizontal empieza en la posicion 0 por defecto
-    def update(self, scrollx):
-        self.rectSubimagen.left = scrollx
+        self.rectSubimagen.bottom = ALTO_PANTALLA # El scroll vertical empieza en la posicion 1440 por defecto
+    
+    def update(self, dir):
+        if dir=="up":
+            self.rectSubimagen.bottom -= ALTO_PANTALLA+10
+        elif dir=="down":
+                self.rectSubimagen.bottom += ALTO_PANTALLA-10
+
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
 
