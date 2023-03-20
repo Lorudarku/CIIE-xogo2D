@@ -183,20 +183,24 @@ class Personaje(MiSprite):
 
         elif direccion==ESPACIOIAB:
             angle= -3*math.pi/4
-            
+        self.dashes-=1
         return angle,speed
+
+    def div(self,n, d):
+        return n / d if d else 0
 
     def checarColisionAbajo(self, plataforma):
         #   DERECHA PLATAFORMA
         v1x=self.rect.bottomleft[0]-plataforma.rect.center[0]
         v1y=self.rect.bottomleft[1]-plataforma.rect.center[1]
+        
         #diagonal derecha plataforma
         v2x=plataforma.rect.topright[0]-plataforma.rect.center[0]
         v2y=plataforma.rect.topright[1]-plataforma.rect.center[1]
         
         #derecha negativa || izquierda positiva
-        pendienteSelfL= math.atan(v1x/v1y) #por la derecha tiene que ser mayor
-        pendientePlatL= math.atan(v2x/v2y)
+        pendienteSelfL= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatL= math.atan(self.div(v2x,v2y))
 
         #   IZQUIERDA PLATAFORMA
         v1x=self.rect.bottomright[0]-plataforma.rect.center[0]
@@ -205,15 +209,45 @@ class Personaje(MiSprite):
         v2x=plataforma.rect.topleft[0]-plataforma.rect.center[0]
         v2y=plataforma.rect.topleft[1]-plataforma.rect.center[1]
 
-        pendienteSelfR= math.atan(v1x/v1y) #por la derecha tiene que ser mayor
-        pendientePlatR= math.atan(v2x/v2y)
-        print("pendienteSelfR" ,pendienteSelfR)
-        print("pendientePlatR" ,pendientePlatR)
+        pendienteSelfR= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatR= math.atan(self.div(v2x,v2y))
         
-        if (self.rect.bottom > plataforma.rect.top) and ( 
+        if (self.rect.bottom > plataforma.rect.top > self.rect.top) and ( 
                 (self.rect.left>plataforma.rect.left and self.rect.right<plataforma.rect.right)
-                or (plataforma.rect.center[0]<self.rect.bottomleft[0] and pendienteSelfL>=pendientePlatL)
-                or (plataforma.rect.center[0]>self.rect.bottomright[0] and pendienteSelfR<=pendientePlatR)
+                or (plataforma.rect.center[0]<self.rect.bottomleft[0]<plataforma.rect.right and pendienteSelfL>=pendientePlatL)
+                or (plataforma.rect.center[0]>self.rect.bottomright[0]>plataforma.rect.left and pendienteSelfR<=pendientePlatR)
+                ):
+            return True
+        else:        
+            return False
+    
+    def checarColisionArriba(self, plataforma):
+        #   DERECHA PLATAFORMA
+        v1x=self.rect.topleft[0]-plataforma.rect.center[0]
+        v1y=self.rect.topleft[1]-plataforma.rect.center[1]
+        
+        #diagonal derecha plataforma
+        v2x=plataforma.rect.bottomright[0]-plataforma.rect.center[0]
+        v2y=plataforma.rect.bottomright[1]-plataforma.rect.center[1]
+        
+        #derecha negativa || izquierda positiva
+        pendienteSelfL= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatL= math.atan(self.div(v2x,v2y))
+
+        #   IZQUIERDA PLATAFORMA
+        v1x=self.rect.topright[0]-plataforma.rect.center[0]
+        v1y=self.rect.topright[1]-plataforma.rect.center[1]
+        #diagonal izquierda plataforma
+        v2x=plataforma.rect.bottomleft[0]-plataforma.rect.center[0]
+        v2y=plataforma.rect.bottomleft[1]-plataforma.rect.center[1]
+
+        pendienteSelfR= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatR= math.atan(self.div(v2x,v2y))
+        
+        if (self.rect.top < plataforma.rect.bottom < self.rect.bottom) and ( 
+                (self.rect.left>plataforma.rect.left and self.rect.right<plataforma.rect.right)
+                or (plataforma.rect.center[0]<self.rect.topleft[0]<plataforma.rect.right and pendienteSelfL>=pendientePlatL)
+                or (plataforma.rect.center[0]>self.rect.topright[0]>plataforma.rect.left and pendienteSelfR<=pendientePlatR)
                 ):
             return True
         else:        
@@ -228,8 +262,8 @@ class Personaje(MiSprite):
         v2y=plataforma.rect.topleft[1]-plataforma.rect.center[1]
         
         #derecha negativa || izquierda positiva
-        pendienteSelfL= math.atan(v1x/v1y) #por la derecha tiene que ser mayor
-        pendientePlatL= math.atan(v2x/v2y)
+        pendienteSelfL= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatL= math.atan(self.div(v2x,v2y))
 
         #   ABAJO PLATAFORMA
         v1x=self.rect.topright[0]-plataforma.rect.center[0]
@@ -238,37 +272,82 @@ class Personaje(MiSprite):
         v2x=plataforma.rect.bottomleft[0]-plataforma.rect.center[0]
         v2y=plataforma.rect.bottomleft[1]-plataforma.rect.center[1]
 
-        pendienteSelfR= math.atan(v1x/v1y) #por la derecha tiene que ser mayor
-        pendientePlatR= math.atan(v2x/v2y)
-        print("pendientePlatR",pendientePlatR)
-        print("pendienteSelfR",pendienteSelfR)
+        pendienteSelfR= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatR= math.atan(self.div(v2x,v2y))
         
-        if (self.rect.bottom > plataforma.rect.top) and ( 
-                self.rect.left>plataforma.rect.left and self.rect.right<plataforma.rect.right
-                or plataforma.rect.center[0]<self.rect.bottomleft[0] and pendienteSelfL>=pendientePlatL
-                or plataforma.rect.center[0]>self.rect.bottomright[0] and pendienteSelfR<=pendientePlatR
-                ):
+        
+        if (self.rect.right > plataforma.rect.left > self.rect.left 
+                and (plataforma.rect.top < self.rect.top and self.rect.bottom < plataforma.rect.bottom 
+                    or plataforma.rect.center[1] >  self.rect.bottomright[1] > plataforma.rect.top and pendienteSelfL>=pendientePlatL
+                    or plataforma.rect.center[1] < self.rect.topright[1] < plataforma.rect.bottom and pendienteSelfR<=pendientePlatR
+                ) 
+                
+            ) :
+            return True
+        else:        
+            return False
+        
+
+    def checarColisionIzquierda(self, plataforma):
+        #   ARRIBA PLATAFORMA
+        v1x=self.rect.bottomleft[0]-plataforma.rect.center[0]
+        v1y=self.rect.bottomleft[1]-plataforma.rect.center[1]
+        #diagonal izquierda plataforma
+        v2x=plataforma.rect.topright[0]-plataforma.rect.center[0]
+        v2y=plataforma.rect.topright[1]-plataforma.rect.center[1]
+        
+        #izquierda negativa || derecha positiva
+        pendienteSelfL= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatL= math.atan(self.div(v2x,v2y))
+
+        #   ABAJO PLATAFORMA
+        v1x=self.rect.topleft[0]-plataforma.rect.center[0]
+        v1y=self.rect.topleft[1]-plataforma.rect.center[1]
+        #diagonal izquierda plataforma
+        v2x=plataforma.rect.bottomright[0]-plataforma.rect.center[0]
+        v2y=plataforma.rect.bottomright[1]-plataforma.rect.center[1]
+
+        pendienteSelfR= math.atan(self.div(v1x,v1y)) #por la derecha tiene que ser mayor
+        pendientePlatR= math.atan(self.div(v2x,v2y))
+        
+        
+        if (self.rect.left < plataforma.rect.right < self.rect.right 
+                and (plataforma.rect.top < self.rect.top and self.rect.bottom < plataforma.rect.bottom 
+                    or plataforma.rect.center[1] >  self.rect.bottomleft[1] > plataforma.rect.top and pendienteSelfL<=pendientePlatL
+                    or plataforma.rect.center[1] < self.rect.topleft[1] < plataforma.rect.bottom and pendienteSelfR>=pendientePlatR
+                ) 
+                
+            ) :
             return True
         else:        
             return False
         
     #comprueba las colisiones del personaje devolviendo una tupla de cuatro booleanos (por las cuatro dirrecciones)
     def checkCollisions(self,grupoPlataformas):
-        plataformas = pygame.sprite.spritecollide(self, grupoPlataformas)
-        colisiones=(False,False,False,False) #([0]ABAJO, [1]ARRIBA, [2]DERECHA, [3]IZQUIERDA)
+        plataformas = pygame.sprite.spritecollide(self, grupoPlataformas,False)
         if (plataformas != None):
             for plataforma in plataformas:
-                self.rect.c
                 if (self.checarColisionAbajo(plataforma)): #abajo
-                    colisiones[0]=True
-                elif (plataforma.rect.bottom>self.rect.top): #arriba
-                    colisiones[1]=True
-                elif (plataforma.rect.left>self.rect.right): #derecha
-                    colisiones[2]=True
-                elif (plataforma.rect.right>self.rect.left): #izquierda
-                    colisiones[3]=True
+                    self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
+                    if self.numPostura==SPRITE_SALTANDO:
+                        self.numPostura=SPRITE_QUIETO
+                    self.speed=0
+                    self.dashes=0
+                elif (self.checarColisionArriba(plataforma)): #arriba
+                    self.establecerPosicion((self.posicion[0], plataforma.posicion[1]+self.rect.height-1))
             
-        return colisiones
+                elif (self.checarColisionDerecha(plataforma)): #derecha
+                    if self.numPostura==SPRITE_SALTANDO:
+                        self.angle=self.angle+math.pi/2
+                    else:
+                        self.establecerPosicion(( plataforma.posicion[0]-self.rect.width+1,self.posicion[1]))
+            
+                elif (self.checarColisionIzquierda(plataforma)): #izquierda
+                    if self.numPostura==SPRITE_SALTANDO:
+                        self.angle=self.angle-math.pi/2
+                    else:
+                        self.establecerPosicion(( plataforma.posicion[0]+plataforma.rect.width-1,self.posicion[1]))
+            
             
                
         
@@ -281,20 +360,10 @@ class Personaje(MiSprite):
         speed=self.speed
         # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
         #  Para ello, miramos si hay colision con alguna plataforma del grupo
-        plataforma = pygame.sprite.spritecollideany(self, grupoPlataformas)
         
-        #  Ademas, esa colision solo nos interesa cuando estamos cayendo
-        #  y solo es efectiva cuando caemos encima, no de lado, es decir,
-        #  cuando nuestra posicion inferior esta por encima de la parte de abajo de la plataforma
-        if (plataforma != None)  and (self.checarColisionAbajo(plataforma)):
-            print(self.checarColisionAbajo(plataforma))
-            # Lo situamos con la parte de abajo un pixel colisionando con la plataforma
-            #  para poder detectar cuando se cae de ella
-            #self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
-            # self.checarColisionDerecha(plataforma)
-            # Lo ponemos como quieto
-            # Y estará quieto en el eje y
-            speed=0
+        #plataforma = pygame.sprite.spritecollide(self, grupoPlataformas)
+        
+        
 
         if self.creativo!=True:
             if self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
@@ -364,7 +433,6 @@ class Personaje(MiSprite):
                             self.mirando = self.movimiento
                             angle,speed=self.saltar("izquierda")
                         else:
-                            self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height-3))
                             angle,speed=self.saltar("arriba")
                     
                 
@@ -372,7 +440,7 @@ class Personaje(MiSprite):
                 # Si no se ha pulsado ninguna tecla
             if self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
-                if not self.numPostura == SPRITE_SALTANDO or (speed==0 and plataforma!=None):
+                if not self.numPostura == SPRITE_SALTANDO:
                     self.numPostura = SPRITE_QUIETO
 
         else:
@@ -429,6 +497,7 @@ class Personaje(MiSprite):
         
         
         self.add_gravity()
+        self.checkCollisions(grupoPlataformas)
         self.moveset(grupoPlataformas)
         
         self.actualizarPostura()
@@ -439,6 +508,7 @@ class Personaje(MiSprite):
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo
         #  calcule la nueva posición del Sprite
+        print(self.dashes)
         MiSprite.update(self, tiempo)
         
         return
