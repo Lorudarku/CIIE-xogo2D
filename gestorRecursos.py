@@ -8,6 +8,9 @@ import pyganim, PIL
 # -------------------------------------------------
 # Clase GestorRecursos
 
+COLS = 25
+ROWS = 15
+
 # En este caso se implementa como una clase vacía, solo con métodos de clase
 class GestorRecursos(object):
     recursos = {}
@@ -110,7 +113,7 @@ class GestorRecursos(object):
             cls.recursos[nombre] = sound
             # Se devuelve
             return sound
-
+    
     @classmethod
     def CargarArchivoFase(cls, nombre):
         # Si el nombre de archivo está entre los recursos ya cargados
@@ -122,11 +125,14 @@ class GestorRecursos(object):
             # Se carga el recurso indicando el nombre de su carpeta
             fullname = os.path.join('niveles', nombre)
             datos = []
+            for cols in range(ROWS):
+                r = [-1] * COLS
+                datos.append(r)
             with open(fullname, newline = '') as csvfile:
                 reader = csv.reader(csvfile, delimiter = ',')
-            for x, row in enumerate(reader):
-                for y, tile in enumerate(row):
-                    datos[x][y] = int(tile)
+                for x, cols in enumerate(reader):
+                    for y, tile in enumerate(cols):
+                        datos[x][y] = int(tile)
             # Se almacena
             cls.recursos[nombre] = datos
             # Se devuelve

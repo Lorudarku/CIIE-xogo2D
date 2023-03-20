@@ -8,20 +8,23 @@ from pygame.locals import *
 from drunken import *
 from menew import *
 from pickUp import *
+import csv
+import numpy as np
 
 # -------------------------------------------------
 # -------------------------------------------------
 # Constantes
 # -------------------------------------------------
 # -------------------------------------------------
-
+COLS = 25
+ROWS = 15
 
 # Los bordes de la pantalla para hacer scroll horizontal
 
 # -------------------------------------------------
 # Clase Fase
 class Fase(Escena):
-    def __init__(self, director):
+    def __init__(self, director,level):
         # Habria que pasarle como parámetro el número de fase, a partir del cual se cargue
         #  un fichero donde este la configuracion de esa fase en concreto, con cosas como
         #   - Nombre del archivo con el decorado
@@ -34,9 +37,11 @@ class Fase(Escena):
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
         # Creamos el decorado y el fondo
+        self.fase=GestorRecursos.CargarArchivoFase(level)
+        # self.decorado = Decorado(decorado)
         self.decorado = Decorado()
         self.jugador1 = Jugador()
-        self.grupoJugadores = pygame.sprite.Group( self.jugador1)
+        self.grupoJugadores = pygame.sprite.Group(self.jugador1)
         # Ponemos a los jugadores en sus posiciones iniciales
         self.jugador1.establecerPosicion((200, 400))
         
@@ -50,9 +55,11 @@ class Fase(Escena):
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
+        
     def update(self, tiempo):
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
+    
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
@@ -76,9 +83,10 @@ class Fase(Escena):
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
        
+
 class Decorado:
-    def __init__(self):
-        self.imagen = GestorRecursos.CargarImagen('backgroundTest.png', -1)
+    def __init__(self,nombre='backgroundTest.png'):
+        self.imagen = GestorRecursos.CargarImagen(nombre, -1)
         #cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
         self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
         #pygame.Surface.blit(self.imagen,cubo,(0, 550))
@@ -130,7 +138,8 @@ class Menu(Escena):
         self.director.salirPrograma()
 
     def ejecutarJuego(self):    
-        fase = Fase(self.director)
+
+        fase = Fase(self.director, "level_data0.csv")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):
