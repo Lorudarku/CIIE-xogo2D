@@ -34,7 +34,7 @@ class Fase(Escena):
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
         # Creamos el decorado y el fondo
-        self.decorado = Decorado()
+        self.decorado = Decorado('backgroundTest2.png',size=2)
         self.jugador1 = Jugador()
         self.grupoJugadores = pygame.sprite.Group( self.jugador1)
         # Ponemos a los jugadores en sus posiciones iniciales
@@ -52,10 +52,15 @@ class Fase(Escena):
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
     
     def actualizarScroll(self,jugador1):
-        if jugador1.posicion[1]<self.decorado.rectSubimagen.top:
+        if jugador1.rect.center[1]<0:
+            print("arriba")
             self.decorado.update("up")
-        elif jugador1.posicion[1]>self.decorado.rectSubimagen.bottom:
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]+ALTO_PANTALLA-10))
+        elif jugador1.rect.center[1]>ALTO_PANTALLA:
+            print("abajo")
             self.decorado.update("down")
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA+10))
+        
 
     def update(self, tiempo):
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, tiempo)
@@ -86,22 +91,22 @@ class Fase(Escena):
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
        
 class Decorado:
-    def __init__(self):
-        self.imagen = GestorRecursos.CargarImagen('backgroundTest2.png', -1)
+    def __init__(self,backgroundName,size):
+        self.imagen = GestorRecursos.CargarImagen(backgroundName, -1)
         #cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
-        self.imagen = pygame.transform.scale(self.imagen, ((ANCHO_PANTALLA, ALTO_PANTALLA)))
+        self.imagen = pygame.transform.scale(self.imagen, ((ANCHO_PANTALLA, ALTO_PANTALLA*size)))
         #pygame.Surface.blit(self.imagen,cubo,(0, 550))
         self.rect = self.imagen.get_rect()
-        self.rect.bottom = ALTO_PANTALLA
+        self.rect.bottom = ALTO_PANTALLA*size
         # La subimagen que estamos viendo
         self.rectSubimagen = pygame.Rect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA)
-        self.rectSubimagen.bottom = ALTO_PANTALLA # El scroll vertical empieza en la posicion 1440 por defecto
+        self.rectSubimagen.top=ALTO_PANTALLA*(size-1)# El scroll vertical empieza en la posicion 1440 por defecto
     
     def update(self, dir):
         if dir=="up":
-            self.rectSubimagen.bottom -= ALTO_PANTALLA+10
+            self.rectSubimagen.bottom -= ALTO_PANTALLA
         elif dir=="down":
-                self.rectSubimagen.bottom += ALTO_PANTALLA-10
+            self.rectSubimagen.bottom += ALTO_PANTALLA
 
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)

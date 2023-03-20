@@ -91,7 +91,7 @@ class Personaje(MiSprite):
 
         # Primero invocamos al constructor de la clase padre
         MiSprite.__init__(self);
-        self.creativo=True
+        self.creativo=False
         # Se carga la hoja
         self.dashes=0
         self.hoja = GestorRecursos.CargarImagen(archivoImagen,-1)

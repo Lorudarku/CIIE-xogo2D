@@ -5,7 +5,7 @@
 import pygame
 import director
 from director import *
-from faseR import Menu
+from fase import Menu
 import escena
 from escena import *
 
