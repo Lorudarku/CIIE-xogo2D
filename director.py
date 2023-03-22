@@ -9,31 +9,31 @@ from pygame.locals import *
 
 
 class Director():
-
-    def __init__(self):
+    @classmethod
+    def __init__(cls):
         # Inicializamos la pantalla y el modo grafico
-        self.screen = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA))
+        cls.screen = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA))
         pygame.display.set_caption("Drunken-Jumper")    #Drunk King
         # Pila de escenas
-        self.pila = []
+        cls.pila = []
         # Flag que nos indica cuando quieren salir de la escena
-        self.salir_escena = False
+        cls.salir_escena = False
         # Reloj
-        self.reloj = pygame.time.Clock()
+        cls.reloj = pygame.time.Clock()
 
+    @classmethod
+    def bucle(cls, escena):
 
-    def bucle(self, escena):
-
-        self.salir_escena = False
+        cls.salir_escena = False
 
         # Eliminamos todos los eventos producidos antes de entrar en el bucle
         pygame.event.clear()
         
         # El bucle del juego, las acciones que se realicen se harán en cada escena
-        while not self.salir_escena:
+        while not cls.salir_escena:
 
             # Sincronizar el juego a 60 fps
-            tiempo_pasado = self.reloj.tick(60)
+            tiempo_pasado = cls.reloj.tick(60)
             
             # Pasamos los eventos a la escena
             escena.eventos(pygame.event.get())
@@ -42,42 +42,45 @@ class Director():
             escena.update(tiempo_pasado)
 
             # Se dibuja en pantalla
-            escena.dibujar(self.screen)
+            escena.dibujar(cls.screen)
             pygame.display.flip()
 
-
-    def ejecutar(self):
+    @classmethod
+    def ejecutar(cls):
 
         # Mientras haya escenas en la pila, ejecutaremos la de arriba
-        while (len(self.pila)>0):
+        while (len(cls.pila)>0):
 
             # Se coge la escena a ejecutar como la que este en la cima de la pila
-            escena = self.pila[len(self.pila)-1]
+            escena = cls.pila[len(cls.pila)-1]
 
             # Ejecutamos el bucle de eventos hasta que termine la escena
-            self.bucle(escena)
+            cls.bucle(escena)
 
-
-    def salirEscena(self):
+    @classmethod
+    def salirEscena(cls):
         # Indicamos en el flag que se quiere salir de la escena
-        self.salir_escena = True
+        cls.salir_escena = True
         # Eliminamos la escena actual de la pila (si la hay)
-        if (len(self.pila)>0):
-            self.pila.pop()
+        if (len(cls.pila)>0):
+            cls.pila.pop()
 
-    def salirPrograma(self):
+    @classmethod
+    def salirPrograma(cls):
         # Vaciamos la lista de escenas pendientes
-        self.pila = []
-        self.salir_escena = True
+        cls.pila = []
+        cls.salir_escena = True
 
-    def cambiarEscena(self, escena):
-        self.salirEscena()
+    @classmethod
+    def cambiarEscena(cls, escena):
+        cls.salirEscena()
         # Ponemos la escena pasada en la cima de la pila
-        self.pila.append(escena)
+        cls.pila.append(escena)
 
-    def apilarEscena(self, escena):
-        self.salir_escena = True
+    @classmethod
+    def apilarEscena(cls, escena):
+        cls.salir_escena = True
         # Ponemos la escena pasada en la cima de la pila
         #  (por encima de la actual)
-        self.pila.append(escena)
+        cls.pila.append(escena)
 

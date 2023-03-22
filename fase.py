@@ -61,9 +61,12 @@ class Fase(Escena):
         cerbeza1=Beer(pygame.Rect(500, 500, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
+        self.grupoMuros = pygame.sprite.Group()
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
+        print(self.grupoMuros.sprites)
+        print(self.grupoPlataformas.sprites)
         self.procesar_datos(datos)
 
         
@@ -71,13 +74,16 @@ class Fase(Escena):
         
 
     def procesar_datos(self, datos):
-       for y, fila in enumerate(datos):
+        for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
                 if tile >= 0:
                     #tile_data = ()
-                    if tile >= 0 and tile <= 8:
+                    if (tile >= 0 and tile <= 3) or (tile >= 5 and tile <= 8):
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoPlataformas.add(wall)
+                    if tile == 4:
+                        wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
+                        self.grupoMuros.add(wall)
                     if tile >= 9 and tile <= 12:
                         pass
                         decoracion = Decorado(f'{tile}.png') #tile_data)
@@ -102,13 +108,14 @@ class Fase(Escena):
         
         
     def update(self, tiempo):
-        self.grupoSpritesDinamicos.update(self.grupoPlataformas, tiempo)
+        self.grupoSpritesDinamicos.update(self.grupoPlataformas,self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
     
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
         self.grupoPlataformas.draw(pantalla)
+        self.grupoMuros.draw(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
         self.grupoPickUps.draw(pantalla)

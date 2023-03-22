@@ -70,7 +70,7 @@ class ReactiveButtonJugar(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self, "rectangulo-semitransparente.png",
-            (600, 250),"Jugar",fuente,"#d7fcd4","Green",pantalla)
+            (ANCHO_PANTALLA/2, ALTO_PANTALLA/2.88),"Jugar",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
         self.pantalla.menu.ejecutarJuego()
@@ -79,7 +79,7 @@ class ReactiveButtonOpciones(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
-            (600, 400),"Opciones",fuente,"#d7fcd4","Green",pantalla)
+            (ANCHO_PANTALLA/2, ALTO_PANTALLA/1.8),"Opciones",fuente,"#d7fcd4","Green",pantalla)
     
     def accion(self):
         self.pantalla.menu.mostrarPantallaOpciones(False)
@@ -88,7 +88,7 @@ class ReactiveButtonSalir(ReactiveButton):
     def __init__(self, pantalla):
         fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 40)
         ReactiveButton.__init__(self,"rectangulo-semitransparente.png",
-            (600, 550),"Salir",fuente,"#ffddda","Red",pantalla)
+            (ANCHO_PANTALLA/2, ALTO_PANTALLA/1.31),"Salir",fuente,"#ffddda","Red",pantalla)
         
     def accion(self):
         self.pantalla.menu.salirPrograma()
