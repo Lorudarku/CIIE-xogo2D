@@ -98,6 +98,7 @@ class Personaje(MiSprite):
         MiSprite.__init__(self);
         self.creativo=False
         # Se carga la hoja
+        self.potaCount=0
         self.dashes=0
         self.hoja = GestorRecursos.CargarImagen(archivoImagen,-1)
         self.hoja = self.hoja.convert_alpha()
@@ -162,32 +163,49 @@ class Personaje(MiSprite):
         return self.physics.add_vectors(self.angle, self.speed, angle, speed)
      
     def dash(self,direccion):
-        print("dashieeeeee",direccion)
+        
         speed = 10
         
         if direccion==ESPACIOAR:
             angle=0       
-        
+            self.numPostura=SPRITE_POTA_D
+
         elif direccion==ESPACIOAB:
             angle= math.pi
+            self.numPostura=SPRITE_POTA_U
             
         elif direccion==ESPACIOD:
             angle= math.pi/2
-            
+            self.numPostura=SPRITE_POTA_R
+            self.mirando=IZQUIERDA
+
         elif direccion==ESPACIOI:
             angle= -math.pi/2
+            self.numPostura=SPRITE_POTA_R
+            self.mirando=DERECHA
+
 
         elif direccion==ESPACIODAR:
             angle= math.pi/4
+            self.numPostura=SPRITE_POTA_DR
+            self.mirando=IZQUIERDA
 
         elif direccion==ESPACIODAB:
             angle= 3*math.pi/4
+            self.numPostura=SPRITE_POTA_UR
+            self.mirando=IZQUIERDA
 
         elif direccion==ESPACIOIAR:
             angle= -math.pi/4
+            self.numPostura=SPRITE_POTA_DR
+            self.mirando=DERECHA
 
         elif direccion==ESPACIOIAB:
             angle= -3*math.pi/4
+            print("YO WOTOFO")
+            self.numPostura=SPRITE_POTA_UR
+            self.mirando=DERECHA
+
         self.dashes-=1
         return angle,speed
 
@@ -371,12 +389,20 @@ class Personaje(MiSprite):
         
 
         if self.creativo!=True:
-            if self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
+            if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR):
+                if self.potaCount>0:
+                    self.potaCount-=1
+                else:
+                    self.numPostura=SPRITE_SALTANDO
+
+            elif self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
                 # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
                 
-                if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB) and self.dashes>0:
-                    angle,speed=self.dash(self.movimiento)  
-                self.movimiento = QUIETO  
+                if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB,ESPACIOIAB) and self.dashes>0:
+                    angle,speed=self.dash(self.movimiento)
+                    self.potaCount=40 
+
+                
             else:
                 
 
@@ -513,7 +539,7 @@ class Personaje(MiSprite):
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo
         #  calcule la nueva posición del Sprite
-        print(self.dashes)
+        
         MiSprite.update(self, tiempo)
         
         return

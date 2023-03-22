@@ -59,7 +59,7 @@ class Fase(Escena):
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
         #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        cerbeza1=Beer(pygame.Rect(300, 450, 6, 16))
+        cerbeza1=Beer(pygame.Rect(500, 500, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
