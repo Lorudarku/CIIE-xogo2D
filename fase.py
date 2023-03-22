@@ -54,7 +54,7 @@ class Fase(Escena):
         self.jugador1 = Jugador()
         self.grupoJugadores = pygame.sprite.Group(self.jugador1)#lo de el grupo que tal que pin que pan, cargar, el trece
         # Ponemos a los jugadores en sus posiciones iniciales
-        self.jugador1.establecerPosicion((200, 400))
+        self.jugador1.establecerPosicion((550, 550))
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo

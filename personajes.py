@@ -27,6 +27,11 @@ SPRITE_AGACHADO = 2
 SPRITE_SALTANDO = 3
 SPRITE_CAYENDO = 4
 SPRITE_APLASTADO = 5
+SPRITE_POTA_D=6
+SPRITE_POTA_U=7
+SPRITE_POTA_UR=8
+SPRITE_POTA_R=9
+SPRITE_POTA_DR=10
 
 # Velocidades de los distintos personajes
 VELOCIDAD_JUGADOR = 1.4 # Pixeles por milisegundo
@@ -108,7 +113,7 @@ class Personaje(MiSprite):
         self.numImagenPostura = 0;
         cont = 0;
         self.coordenadasHoja = [];
-        for linea in range(0, 6):
+        for linea in range(0, 11):
             self.coordenadasHoja.append([])
             tmp = self.coordenadasHoja[linea]
             for postura in range(1, numImagenes[linea]+1):
