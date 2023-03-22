@@ -26,8 +26,7 @@ for x in range(TILE_TYPES):
 '''
 # -------------------------------------------------
 # -------------------------------------------------
-COLS = 25
-ROWS = 15
+
 
 # Los bordes de la pantalla para hacer scroll horizontal
 
@@ -187,7 +186,7 @@ class Menu(Escena):
 
     def ejecutarJuego(self):    
 
-        fase = Fase(self.director, "level_data0.csv")
+        fase = Fase(self.director, "prueba.csv")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):
