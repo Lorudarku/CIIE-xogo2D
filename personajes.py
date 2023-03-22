@@ -358,6 +358,7 @@ class Personaje(MiSprite):
                     self.speed=0
                     self.dashes=0
                 elif (self.checarColisionArriba(plataforma)): #arriba
+                    
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]+self.rect.height-1))
             
                 elif (self.checarColisionDerecha(plataforma)): #derecha
@@ -377,13 +378,12 @@ class Personaje(MiSprite):
         muros = pygame.sprite.spritecollide(self, grupoMuros,False)
         if (muros != None):
             for muro in muros:
-                
                 if (self.checarColisionDerecha(muro)): #derecha
                     print (":this a derecha?")
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( self.posicion[0]-self.rect.width+1,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]-1,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(muro)): #izquierda
                     if self.numPostura==SPRITE_SALTANDO:
@@ -391,7 +391,7 @@ class Personaje(MiSprite):
                     else:
                         print (":this a izquierda??")
                     
-                        self.establecerPosicion(( self.posicion[0]+15,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]+2,self.posicion[1]))
                     
             
                

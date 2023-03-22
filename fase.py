@@ -63,11 +63,12 @@ class Fase(Escena):
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
-        self.grupoSprites = pygame.sprite.Group( self.jugador1 )
+        self.grupoSprites = pygame.sprite.Group(  )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
         self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
-
+        self.grupoSprites.add(self.jugador1)
+        
     def procesar_datos(self, datos):
        for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
@@ -203,7 +204,7 @@ class Menu(Escena):
 
     def ejecutarJuego(self):    
 
-        fase = Fase(self.director, "level_data0.csv")
+        fase = Fase(self.director, "prueba.csv")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):

@@ -278,7 +278,7 @@ class PantallaInicialGUI(PantallaGUI):
         numeroCancion = randint(0,2)
         #Cargamos la musica inicial
         GestorRecursos.CargarSonido(canciones[numeroCancion],True)
-        pygame.mixer.music.set_volume(round(0.1,1)) #volumen inicial
+        pygame.mixer.music.set_volume(round(0.0,1)) #volumen inicial
         pygame.mixer.music.play()
 
         PantallaGUI.__init__(self, menu, 'fondoMenu.png')
