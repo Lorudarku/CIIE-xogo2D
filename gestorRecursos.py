@@ -123,7 +123,7 @@ class GestorRecursos(object):
         # Si no ha sido cargado anteriormente
         else:
             # Se carga el recurso indicando el nombre de su carpeta
-            filas = 48
+            filas = 46
             columnas = 25
             fullname = os.path.join('niveles', nombre)
             datos = []

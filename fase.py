@@ -49,7 +49,7 @@ class Fase(Escena):
         #print(datos)
         # Creamos el decorado y el fondo
         # self.decorado = Decorado(decorado)
-        self.decorado = Decorado()
+        self.decorado = Decorado('backgroundTest2.png',size=3)
         self.jugador1 = Jugador()
         self.grupoJugadores = pygame.sprite.Group(self.jugador1)#lo de el grupo que tal que pin que pan, cargar, el trece
         # Ponemos a los jugadores en sus posiciones iniciales
@@ -65,60 +65,55 @@ class Fase(Escena):
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group( self.jugador1 )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
-        print(self.grupoMuros.sprites)
-        print(self.grupoPlataformas.sprites)
+        self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
 
-        
-        
-        
-
     def procesar_datos(self, datos):
-        for y, fila in enumerate(datos):
+       for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
                 if tile >= 0:
                     #tile_data = ()
                     if (tile >= 0 and tile <= 3) or (tile >= 5 and tile <= 8):
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoPlataformas.add(wall)
+                        self.grupoSprites.add(wall)
                     if tile == 4:
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoMuros.add(wall)
+                        self.grupoSprites.add(wall)
                     if tile >= 9 and tile <= 12:
                         pass
-                        decoracion = Decorado(f'{tile}.png') #tile_data)
-                        self.grupoDecorado.add(decoracion)
+                        #decoracion = Decorado(f'{tile}.png') #tile_data)
+                        #self.grupoDecorado.add(decoracion)
                     if tile == 13:
                         pass
-                        jugador1 = Jugador()
-                        self.grupoEnemigos.add(jugador1)
-                        self.grupoSpritesDinamicos.add(jugador1)
-                        self.grupoSprites.add(jugador1)
+                        # jugador1 = Jugador()
+                        # self.grupoEnemigos.add(jugador1)
+                        # self.grupoSpritesDinamicos.add(jugador1)
+                        # self.grupoSprites.add(jugador1)
                     if tile == 14:
                         pass
-                        enemy = Jugador()
-                        self.grupoEnemigos.add(enemy)
-                        self.grupoSpritesDinamicos.add(enemy)
-                        self.grupoSprites.add(enemy)
+                        # enemy = Jugador()
+                        # self.grupoEnemigos.add(enemy)
+                        # self.grupoSpritesDinamicos.add(enemy)
+                        # self.grupoSprites.add(enemy)
                     if tile == 15:
                         pass
                         #item = Item()
                         #self.grupoItems.add(item)
 
-        
-        
     def update(self, tiempo):
-        self.grupoSpritesDinamicos.update(self.grupoPlataformas,self.grupoMuros, tiempo)
+        self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
+        self.actualizarScroll(self.jugador1)
     
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
-        self.grupoPlataformas.draw(pantalla)
-        self.grupoMuros.draw(pantalla)
+        # self.grupoPlataformas.draw(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
-        self.grupoPickUps.draw(pantalla)
+        # self.grupoPickUps.draw(pantalla)
     
     def eventos(self, lista_eventos):
         # Miramos a ver si hay algun evento de salir del programa
@@ -136,21 +131,39 @@ class Fase(Escena):
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
    
       
-       
+    def actualizarScroll(self,jugador1):
+        if jugador1.rect.center[1]<0:
+            print("arriba")
+            self.decorado.update("up")
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]+ALTO_PANTALLA-10))
+        elif jugador1.rect.center[1]>ALTO_PANTALLA:
+            print("abajo")
+            self.decorado.update("down")
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA+10))
+
+        #Si se cambio el scroll, hay que actualizar las posiciones de los sprites
+        for sprite in self.grupoSprites:
+            sprite.establecerPosicion((sprite.posicion[0],sprite.posicion[1]-self.decorado.rectSubimagen.top))
+
+        
 
 class Decorado:
-    def __init__(self,nombre='backgroundTest.png'):
-        self.imagen = GestorRecursos.CargarImagen(nombre, -1)
-        #cubo=GestorRecursos.CargarImagen("rectangulo-semitransparente.png", -1)
-        self.imagen = pygame.transform.scale(self.imagen, (ANCHO_PANTALLA, ALTO_PANTALLA))
-        #pygame.Surface.blit(self.imagen,cubo,(0, 550))
+    def __init__(self,backgroundName, size):
+        self.imagen = GestorRecursos.CargarImagen(backgroundName, -1)
+        self.imagen = pygame.transform.scale(self.imagen, ((ANCHO_PANTALLA, ALTO_PANTALLA*size)))
+
         self.rect = self.imagen.get_rect()
-        self.rect.bottom = ALTO_PANTALLA
+        self.rect.bottom = ALTO_PANTALLA*size
         # La subimagen que estamos viendo
         self.rectSubimagen = pygame.Rect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA)
-        self.rectSubimagen.left = 0 # El scroll horizontal empieza en la posicion 0 por defecto
-    def update(self, scrollx):
-        self.rectSubimagen.left = scrollx
+        self.rectSubimagen.top=ALTO_PANTALLA*(size-1)# El scroll vertical empieza en la posicion 1440 por defecto
+
+    def update(self, dir):
+        if dir=="up":
+            self.rectSubimagen.bottom -= ALTO_PANTALLA
+        elif dir=="down":
+            self.rectSubimagen.bottom += ALTO_PANTALLA
+    
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
 
