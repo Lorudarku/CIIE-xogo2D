@@ -58,7 +58,7 @@ class Fase(Escena):
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
         #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        cerbeza1=Beer(pygame.Rect(500, 500, 6, 16))
+        cerbeza1=Beer(pygame.Rect(800, 700, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
@@ -87,10 +87,7 @@ class Fase(Escena):
                         #self.grupoDecorado.add(decoracion)
                     if tile == 13:
                         pass
-                        # jugador1 = Jugador()
-                        # self.grupoEnemigos.add(jugador1)
-                        # self.grupoSpritesDinamicos.add(jugador1)
-                        # self.grupoSprites.add(jugador1)
+                        
                     if tile == 14:
                         pass
                         # enemy = Jugador()
@@ -206,7 +203,7 @@ class Menu(Escena):
 
     def ejecutarJuego(self):    
 
-        fase = Fase(self.director, "prueba.csv")
+        fase = Fase(self.director, "level_data0.csv")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):

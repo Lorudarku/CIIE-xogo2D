@@ -364,31 +364,34 @@ class Personaje(MiSprite):
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( plataforma.posicion[0]-self.rect.width+1,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]-self.rect.width+1,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(plataforma)): #izquierda
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( plataforma.posicion[0]+plataforma.rect.width-1,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]+plataforma.rect.width-1,self.posicion[1]))
             
     def checkCollisionsWall(self,grupoMuros):
         
-        plataformas = pygame.sprite.spritecollide(self, grupoMuros,False)
-        if (plataformas != None):
-            #print("amai un muro")
-            for plataforma in plataformas:
-                if (self.checarColisionDerecha(plataforma)): #derecha
+        muros = pygame.sprite.spritecollide(self, grupoMuros,False)
+        if (muros != None):
+            for muro in muros:
+                
+                if (self.checarColisionDerecha(muro)): #derecha
+                    print (":this a derecha?")
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( plataforma.posicion[0]-self.rect.width+1,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]-self.rect.width+1,self.posicion[1]))
             
-                elif (self.checarColisionIzquierda(plataforma)): #izquierda
+                elif (self.checarColisionIzquierda(muro)): #izquierda
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( plataforma.posicion[0]+plataforma.rect.width-1,self.posicion[1]))
+                        print (":this a izquierda??")
+                    
+                        self.establecerPosicion(( self.posicion[0]+15,self.posicion[1]))
                     
             
                
