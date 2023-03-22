@@ -9,7 +9,7 @@ import pyganim, PIL
 # Clase GestorRecursos
 
 COLS = 25
-ROWS = 48
+ROWS = 46
 
 # En este caso se implementa como una clase vacía, solo con métodos de clase
 class GestorRecursos(object):
@@ -123,8 +123,8 @@ class GestorRecursos(object):
         # Si no ha sido cargado anteriormente
         else:
             # Se carga el recurso indicando el nombre de su carpeta
-            filas = 46
-            columnas = 25
+            filas = ROWS
+            columnas = COLS
             fullname = os.path.join('niveles', nombre)
             datos = []
             
