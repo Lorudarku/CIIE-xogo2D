@@ -498,15 +498,9 @@ class Personaje(MiSprite):
 
     def update(self, grupoPlataformas,grupoMuros, tiempo):
         
-        
-        self.add_gravity()
-        
-        self.checkCollisionsWall(grupoMuros)
-        self.checkCollisionsPlat(grupoPlataformas)
-        
-        self.moveset(grupoPlataformas)
-        #print(self.angle)
-        self.actualizarPostura()
+        #El update lo hacen las subcalses
+
+
         # print(self.speed)
         
         
