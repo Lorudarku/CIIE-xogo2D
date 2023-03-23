@@ -46,6 +46,7 @@ class Fase(Escena):
         # De esta forma, se podrian tener muchas fases distintas con esta clase
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
+        self.nombreFase=archivoFase
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
         #print(datos)
         # Creamos el decorado y el fondo
@@ -150,6 +151,32 @@ class Fase(Escena):
                 if evento.key == K_ESCAPE:
                     # Se muestra la pantalla de pausa
                     self.director.apilarEscena(MenuPausa(self.director))
+                #Si es la tecla e
+                if evento.key == K_e:
+                    for ladder in self.grupoLadders:
+                        if ladder.rect[0]<100:  #subida
+                            #   f'{tile}.csv'
+                            if self.nombreFase=="nivel1.csv":
+                                self.director.salirEscena()
+                                fase = Fase(self.director, "nivel2.csv")
+                                self.director.cambiarEscena(fase)
+                            elif self.nombreFase=="nivel2.csv":
+                                fase = Fase(self.director, "nivel3.csv")
+                                self.director.cambiarEscena(fase)
+                            elif self.nombreFase=="nivel3.csv":
+                                # fase = PantallaVictoria(self.director, "nivel3.csv")
+                                # self.director.cambiarEscena(fase)
+                                self.director.salirEscena()
+                        else:   #bajada
+                            if self.nombreFase=="nivel3.csv":
+                                fase = Fase(self.director, "nivel2.csv")
+                                self.director.cambiarEscena(fase)
+                            elif self.nombreFase=="nivel2.csv":
+                                fase = Fase(self.director, "nivel1.csv")
+                                self.director.cambiarEscena(fase)
+                            
+
+
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
    
@@ -236,7 +263,7 @@ class Menu(Escena):
 
     def ejecutarJuego(self):    
 
-        fase = Fase(self.director, "prueba.csv")
+        fase = Fase(self.director, "nivel1.csv")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):
