@@ -137,6 +137,7 @@ class Fase(Escena):
         # self.grupoPlataformas.draw(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
+        self.grupoSpritesDinamicos.draw(pantalla)
         # self.grupoPickUps.draw(pantalla)
     
     def eventos(self, lista_eventos):
@@ -185,11 +186,11 @@ class Fase(Escena):
         if jugador1.rect.center[1]<0:
             print("arriba")
             self.decorado.update("up")
-            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]+ALTO_PANTALLA-10))
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]+ALTO_PANTALLA))
         elif jugador1.rect.center[1]>ALTO_PANTALLA:
             print("abajo")
             self.decorado.update("down")
-            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA+10))
+            jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA))
 
         #Si se cambio el scroll, hay que actualizar las posiciones de los sprites
         for sprite in self.grupoSprites:

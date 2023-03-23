@@ -231,7 +231,7 @@ class Personaje(MiSprite):
                 or (plataforma.rect.center[0]<self.rect.topleft[0]<plataforma.rect.right and pendienteSelfL>=pendientePlatL)
                 or (plataforma.rect.center[0]>self.rect.topright[0]>plataforma.rect.left and pendienteSelfR<=pendientePlatR)
                 )and(
-                    (-math.pi/2<self.angle<math.pi/2) or (3*math.pi/2>self.angle>5*math.pi/2)
+                    (-math.pi/2<self.angle<math.pi/2) or (3*math.pi/2>self.angle>5*math.pi/2) or (-3*math.pi/2<self.angle<-5*math.pi/2)
                 ):
             return True
         else:        
