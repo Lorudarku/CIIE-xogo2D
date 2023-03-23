@@ -73,9 +73,9 @@ class Fase(Escena):
         self.rata = Rata()
         self.bat=Bat()
         self.bat.establecerPosicion((550, 400+ALTO_PANTALLA*2))
-        self.grupoEnemigos.add(self.rata)
-        self.grupoSpritesDinamicos.add(self.rata)
-        self.grupoSprites.add(self.rata)
+        self.grupoEnemigos.add(self.bat)
+        self.grupoSpritesDinamicos.add(self.bat)
+        self.grupoSprites.add(self.bat)
         #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
         #self.grupoSprites.add(self.jugador1)
@@ -122,7 +122,7 @@ class Fase(Escena):
                         #salida = Salida()
 
     def update(self, tiempo):
-        self.rata.mover_cpu(self.grupoPlataformas,self.grupoMuros)
+        self.bat.mover_cpu(self.grupoPlataformas,self.grupoMuros)
 
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
