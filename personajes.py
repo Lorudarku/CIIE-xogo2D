@@ -21,23 +21,17 @@ ESPACIODAB=11
 ESPACIOIAR=12
 ESPACIOIAB=13
 #Posturas
-SPRITE_QUIETO = 0
-SPRITE_ANDANDO = 1
-SPRITE_AGACHADO = 2
-SPRITE_SALTANDO = 3
-SPRITE_CAYENDO = 4
-SPRITE_APLASTADO = 5
-SPRITE_POTA_D=6
-SPRITE_POTA_U=7
-SPRITE_POTA_UR=8
-SPRITE_POTA_R=9
-SPRITE_POTA_DR=10
+ESTADO_QUIETO = 0
+ESTADO_ANDANDO = 1
+ESTADO_AGACHADO = 2
+ESTADO_AIRE = 3
+
+
+
+
 
 # Velocidades de los distintos personajes
-VELOCIDAD_JUGADOR = 1.4 # Pixeles por milisegundo
-VELOCIDAD_MAXIMA_JUGADOR=15
-VELOCIDAD_SALTO_JUGADOR = 0.3 # Pixeles por milisegundo
-RETARDO_ANIMACION_JUGADOR = 5 # updates que durará cada imagen del personaje
+ # updates que durará cada imagen del personaje
                               # debería de ser un valor distinto para cada postura
 
 # updates que durará cada imagen del personaje
@@ -54,9 +48,7 @@ class MiSprite(pygame.sprite.Sprite):
         self.speed = 0
         self.angle = 0
         
-        self.maxJumpCount = 35
-        self.jumpCount=0
-        self.physics=Physics()
+        
         self.scroll   = (0, 0)
 
     def establecerPosicion(self, posicion):
@@ -92,11 +84,17 @@ class Personaje(MiSprite):
     #  Numero de imagenes en cada postura
     #  Velocidad de caminar y de salto
     #  Retardo para mostrar la animacion del personaje
-    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, walkSpeed, velocidadSalto, retardoAnimacion,maxSpeed):
+    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, walkSpeed, velocidadSalto, retardoAnimacion):
 
         # Primero invocamos al constructor de la clase padre
         MiSprite.__init__(self);
         self.creativo=False
+        self.maxJumpCount = 33
+        self.jumpCount=0
+        self.physics=Physics()
+        self.estado=ESTADO_QUIETO
+
+
         # Se carga la hoja
         self.potaCount=0
         self.dashes=0
@@ -125,7 +123,7 @@ class Personaje(MiSprite):
         self.retardoMovimiento = 0;
 
         # En que postura esta inicialmente
-        self.numPostura = QUIETO
+        self.estado = ESTADO_QUIETO
 
         # El rectangulo del Sprite
         self.rect = pygame.Rect(100,100,self.coordenadasHoja[self.numPostura][self.numImagenPostura][2],self.coordenadasHoja[self.numPostura][self.numImagenPostura][3])
@@ -157,58 +155,12 @@ class Personaje(MiSprite):
             angle= -math.pi/3 * (1 - self.jumpCount / 45.5)
             speed += 0.9
         
-        self.numPostura=SPRITE_SALTANDO
+        self.estado=ESTADO_AIRE
         self.jumpCount = 0
         
         return self.physics.add_vectors(self.angle, self.speed, angle, speed)
      
-    def dash(self,direccion):
-        
-        speed = 10
-        
-        if direccion==ESPACIOAR:
-            angle=0       
-            self.numPostura=SPRITE_POTA_D
-
-        elif direccion==ESPACIOAB:
-            angle= math.pi
-            self.numPostura=SPRITE_POTA_U
-            
-        elif direccion==ESPACIOD:
-            angle= math.pi/2
-            self.numPostura=SPRITE_POTA_R
-            self.mirando=IZQUIERDA
-
-        elif direccion==ESPACIOI:
-            angle= -math.pi/2
-            self.numPostura=SPRITE_POTA_R
-            self.mirando=DERECHA
-
-
-        elif direccion==ESPACIODAR:
-            angle= math.pi/4
-            self.numPostura=SPRITE_POTA_DR
-            self.mirando=IZQUIERDA
-
-        elif direccion==ESPACIODAB:
-            angle= 3*math.pi/4
-            self.numPostura=SPRITE_POTA_UR
-            self.mirando=IZQUIERDA
-
-        elif direccion==ESPACIOIAR:
-            angle= -math.pi/4
-            self.numPostura=SPRITE_POTA_DR
-            self.mirando=DERECHA
-
-        elif direccion==ESPACIOIAB:
-            angle= -3*math.pi/4
-            
-            self.numPostura=SPRITE_POTA_UR
-            self.mirando=DERECHA
-
-        self.dashes-=1
-        return angle,speed
-
+    
     def div(self,n, d):
         return n / d if d else 0
 
@@ -361,8 +313,8 @@ class Personaje(MiSprite):
             for plataforma in plataformas:
                 if (self.checarColisionAbajo(plataforma)): #abajo
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
-                    if self.numPostura==SPRITE_SALTANDO:
-                        self.numPostura=SPRITE_QUIETO
+                    if self.estado==ESTADO_AIRE:
+                        self.estado=ESTADO_QUIETO
                     self.speed=0
                     self.dashes=0
                 elif (self.checarColisionArriba(plataforma)): #arriba
@@ -370,13 +322,13 @@ class Personaje(MiSprite):
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]+self.rect.height-1))
                     
                 elif (self.checarColisionDerecha(plataforma)): #derecha
-                    if self.numPostura==SPRITE_SALTANDO:
+                    if self.estado==ESTADO_AIRE:
                         self.angle=-self.angle
                     else:
                         self.establecerPosicion(( self.posicion[0]-2,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(plataforma)): #izquierda
-                    if self.numPostura==SPRITE_SALTANDO:
+                    if self.estado==ESTADO_AIRE:
                         self.angle=-self.angle
                     else:
                         self.establecerPosicion(( self.posicion[0]+plataforma.rect.width-1,self.posicion[1]))
@@ -388,13 +340,13 @@ class Personaje(MiSprite):
             for muro in muros:
                 if (self.checarColisionDerecha(muro)): #derecha
                     
-                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
+                    if self.estado==ESTADO_AIRE:
                         self.angle=-self.angle
                     else:
                         self.establecerPosicion(( self.posicion[0]-1,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(muro)): #izquierda
-                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
+                    if self.estado==ESTADO_AIRE:
                         self.angle=-self.angle
                     else:
                         
@@ -419,93 +371,80 @@ class Personaje(MiSprite):
         
 
         if self.creativo!=True:
-            if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR):
-                if self.potaCount>0:
-                    self.potaCount-=1
-                else:
-                    self.numPostura=SPRITE_SALTANDO
-
-            elif self.numPostura == SPRITE_SALTANDO or self.numPostura == SPRITE_CAYENDO:
-                # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
+            
+            # Si vamos a la izquierda o a la derecha        
+            if (self.movimiento == IZQUIERDA):
                 
-                if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB,ESPACIOIAB) and self.dashes>0:
-                    angle,speed=self.dash(self.movimiento)
-                    self.potaCount=40 
-
-                
-            else:
-                
-
-                # Si vamos a la izquierda o a la derecha        
-                if (self.movimiento == IZQUIERDA):
-                    
-                    self.mirando = self.movimiento
-                    #si no está agachado AKA cargando el salto, se mueve
-                    if not self.numPostura==SPRITE_AGACHADO:
-                            angle=-math.pi/2
-                            speed=self.walkSpeed
-                    else :
-                        angle,speed=self.saltar("izquierda")
-                        self.numPostura =SPRITE_SALTANDO
-
-                    # Si no estamos en el aire
-                    if self.numPostura != SPRITE_SALTANDO:
-                        # La postura actual sera estar caminando
-                        self.numPostura = SPRITE_ANDANDO
-                        # Ademas, si no estamos encima de ninguna plataforma, caeremos
-                        if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
-                            self.numPostura = SPRITE_SALTANDO   
-
-                elif (self.movimiento == DERECHA):
-                    
-                    self.mirando = self.movimiento
-                    #si no está agachado AKA cargando el salto, se mueve
-                    if not self.numPostura== SPRITE_AGACHADO:
-                    # Esta mirando hacia ese lado
-                        angle=math.pi/2
+                self.mirando = self.movimiento
+                #si no está agachado AKA cargando el salto, se mueve
+                if not self.estado==ESTADO_AGACHADO:
+                        angle=-math.pi/2
                         speed=self.walkSpeed
-                    else:
-                        angle,speed=self.saltar("derecha")
-                        self.numPostura =SPRITE_SALTANDO
+                        
+                else :
+                    angle,speed=self.saltar("izquierda")
+                    self.estado=ESTADO_AIRE
 
+                # Si no estamos en el aire
+                if self.estado!=ESTADO_AIRE:
+                    # La postura actual sera estar caminando
+                    self.estado=ESTADO_ANDANDO
+                    # Ademas, si no estamos encima de ninguna plataforma, caeremos
+                    if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
+                        print(pygame.sprite.spritecollideany(self, grupoPlataformas))
                     
-                    # Si no estamos en el aire
-                    if self.numPostura != SPRITE_SALTANDO:
-                        # La postura actual sera estar caminando
-                        self.numPostura = SPRITE_ANDANDO
-                        # Ademas, si no estamos encima de ninguna plataforma, caeremos
-                        if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
-                            self.numPostura = SPRITE_SALTANDO
+                        self.estado=ESTADO_AIRE  
 
-                # Si queremos saltar
-                #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
-                elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
-                    self.jumpCount += 1
+            elif (self.movimiento == DERECHA):
                 
-                    
-                    if self.numPostura != SPRITE_AGACHADO:
-                        self.numPostura =SPRITE_AGACHADO
+                self.mirando = self.movimiento
+                #si no está agachado AKA cargando el salto, se mueve
+                if not self.estado==ESTADO_AGACHADO:
+                # Esta mirando hacia ese lado
+                    angle=math.pi/2
+                    speed=self.walkSpeed
+                else:
+                    angle,speed=self.saltar("derecha")
+                    self.estado=ESTADO_AIRE
 
-                    elif self.jumpCount>self.maxJumpCount:
-                        if self.movimiento==ESPACIOD: 
-                            self.mirando = self.movimiento
-                            angle,speed=self.saltar("derecha")
-                        elif self.movimiento==ESPACIOI:
-                            self.mirando = IZQUIERDA
-                            angle,speed=self.saltar("izquierda")
-                        else:
-                            angle,speed=self.saltar("arriba")
-                    
+                
+                # Si no estamos en el aire
+                if self.estado!=ESTADO_AIRE:
+                    # La postura actual sera estar caminando
+                    self.estado=ESTADO_ANDANDO
+                    # Ademas, si no estamos encima de ninguna plataforma, caeremos
+                    if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
+                        self.estado=ESTADO_AIRE  
+
+            # Si queremos saltar
+            #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
+            elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
+                self.jumpCount += 1
+            
+                
+                if self.estado!=ESTADO_AGACHADO:
+                    self.estado=ESTADO_AGACHADO
+
+                elif self.jumpCount>self.maxJumpCount:
+                    if self.movimiento==ESPACIOD: 
+                        self.mirando = self.movimiento
+                        angle,speed=self.saltar("derecha")
+                    elif self.movimiento==ESPACIOI:
+                        self.mirando = IZQUIERDA
+                        angle,speed=self.saltar("izquierda")
+                    else:
+                        angle,speed=self.saltar("arriba")
+                
                 
             
                 # Si no se ha pulsado ninguna tecla
             if self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
-                if not self.numPostura == SPRITE_SALTANDO:
-                    if self.numPostura == SPRITE_AGACHADO:
+                if not self.estado==ESTADO_AIRE:
+                    if self.estado==ESTADO_AGACHADO:
                         angle,speed=self.saltar("arriba")
                     else:
-                        self.numPostura = SPRITE_QUIETO
+                        self.estado=ESTADO_QUIETO
 
         else:
             if (self.movimiento == IZQUIERDA):  
@@ -570,8 +509,7 @@ class Personaje(MiSprite):
         self.actualizarPostura()
         # print(self.speed)
         
-        if self.speed>VELOCIDAD_MAXIMA_JUGADOR: 
-            self.speed=VELOCIDAD_MAXIMA_JUGADOR
+        
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo
         #  calcule la nueva posición del Sprite
@@ -591,9 +529,9 @@ class Personaje(MiSprite):
 
 class NoJugador(Personaje):
     "El resto de personajes no jugadores"
-    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion,maxSpeed):
+    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion):
         # Primero invocamos al constructor de la clase padre con los parametros pasados
-        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion, maxSpeed);
+        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion);
 
     # Aqui vendria la implementacion de la IA segun las posiciones de los jugadores
     # La implementacion por defecto, este metodo deberia de ser implementado en las clases inferiores

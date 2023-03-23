@@ -5,10 +5,21 @@ class Rata(NoJugador):
     "El enemigo 'Sniper'"
     def __init__(self):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
-        NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4, 0,  5, 1.7);
+        NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4, 0,  5);
         
         
 
+    def checkCollisionsWall(self,grupoMuros):
+        
+        muros = pygame.sprite.spritecollide(self, grupoMuros,False)
+        if (muros != None):
+            for muro in muros:
+                if (self.checarColisionDerecha(muro)): #derecha
+                    self.movimiento=IZQUIERDA
+                    
+            
+                elif (self.checarColisionIzquierda(muro)): #izquierda
+                    self.movimiento=DERECHA
     
     # Aqui vendria la implementacion de la IA segun las posiciones de los jugadores
     # La implementacion de la inteligencia segun este personaje particular
