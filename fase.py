@@ -10,6 +10,7 @@ from menew import *
 from pickUp import *
 import csv
 import numpy as np
+from enemigos import *
 
 # -------------------------------------------------
 # -------------------------------------------------
@@ -51,23 +52,33 @@ class Fase(Escena):
         # self.decorado = Decorado(decorado)
         self.decorado = Decorado('backgroundTest2.png',size=3)
         self.jugador1 = Jugador()
+        
         self.grupoJugadores = pygame.sprite.Group(self.jugador1)#lo de el grupo que tal que pin que pan, cargar, el trece
+        self.grupoJugadores = pygame.sprite.Group(self.jugador1)
         # Ponemos a los jugadores en sus posiciones iniciales
         self.jugador1.establecerPosicion((550, 550))
+        
         
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
         #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        cerbeza1=Beer(pygame.Rect(800, 700, 6, 16))
+        cerbeza1=Beer(pygame.Rect(500, 550+ALTO_PANTALLA*2, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group(  )
         self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
+        self.rata = Rata()
+        self.rata.establecerPosicion((550, 400+ALTO_PANTALLA*2))
+        self.grupoEnemigos.add(self.rata)
+        self.grupoSpritesDinamicos.add(self.rata)
+        self.grupoSprites.add(self.rata)
         self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
         self.grupoSprites.add(self.jugador1)
+        #self.grupoSprites.add(self.rata)
+        
         
     def procesar_datos(self, datos):
        for y, fila in enumerate(datos):
@@ -87,23 +98,23 @@ class Fase(Escena):
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile == 13:
+                        #self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE/3-self.jugador1.rect))
                         pass
-                        
                     if tile == 14:
                         pass
-                        # enemy = Jugador()
-                        # self.grupoEnemigos.add(enemy)
-                        # self.grupoSpritesDinamicos.add(enemy)
-                        # self.grupoSprites.add(enemy)
+                        
                     if tile == 15:
                         pass
                         #item = Item()
                         #self.grupoItems.add(item)
 
     def update(self, tiempo):
+        self.rata.mover_cpu(self.grupoPlataformas,self.grupoMuros)
+
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
         self.actualizarScroll(self.jugador1)
+
     
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
