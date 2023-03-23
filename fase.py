@@ -51,12 +51,12 @@ class Fase(Escena):
         # Creamos el decorado y el fondo
         # self.decorado = Decorado(decorado)
         self.decorado = Decorado('backgroundTest2.png',size=3)
-        self.jugador1 = Jugador()
+        #self.jugador1 = Jugador()
         
-        self.grupoJugadores = pygame.sprite.Group(self.jugador1)#lo de el grupo que tal que pin que pan, cargar, el trece
-        self.grupoJugadores = pygame.sprite.Group(self.jugador1)
+        self.grupoJugadores = pygame.sprite.Group()#lo de el grupo que tal que pin que pan, cargar, el trece
+        self.grupoJugadores = pygame.sprite.Group()
         # Ponemos a los jugadores en sus posiciones iniciales
-        self.jugador1.establecerPosicion((550, 550))
+        #self.jugador1.establecerPosicion((550, 550))
         
         
         # Creamos las plataformas del decorado
@@ -66,8 +66,8 @@ class Fase(Escena):
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
-        self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
-        self.grupoSprites = pygame.sprite.Group(  )
+        self.grupoSpritesDinamicos = pygame.sprite.Group()
+        self.grupoSprites = pygame.sprite.Group()
         self.grupoPickUps=pygame.sprite.Group()
         self.rata = Rata()
         self.rata.establecerPosicion((550, 400+ALTO_PANTALLA*2))
@@ -76,7 +76,7 @@ class Fase(Escena):
         self.grupoSprites.add(self.rata)
         #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
-        self.grupoSprites.add(self.jugador1)
+        #self.grupoSprites.add(self.jugador1)
         #self.grupoSprites.add(self.rata)
         
         
@@ -97,8 +97,14 @@ class Fase(Escena):
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile == 13:
-                        #self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE/3-self.jugador1.rect))
-                        pass
+                        self.jugador1 = Jugador()
+                        self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
+                        print(x)
+                        print(y)
+                        self.grupoSprites.add(self.jugador1)
+                        self.grupoSpritesDinamicos.add(self.jugador1)
+                        self.grupoJugadores.add(self.jugador1)
+                        #pass
                     if tile == 14:
                         pass
                         
