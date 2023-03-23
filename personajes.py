@@ -20,6 +20,10 @@ ESPACIODAR=10
 ESPACIODAB=11
 ESPACIOIAR=12
 ESPACIOIAB=13
+ARRIBA_DERECHA=14
+ARRIBA_IZQUIERDA=15
+ABAJO_DERECHA=16
+ABAJO_IZQUIERDA=17
 #Posturas
 ESTADO_QUIETO = 0
 ESTADO_ANDANDO = 1
@@ -84,7 +88,7 @@ class Personaje(MiSprite):
     #  Numero de imagenes en cada postura
     #  Velocidad de caminar y de salto
     #  Retardo para mostrar la animacion del personaje
-    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, walkSpeed, velocidadSalto, retardoAnimacion):
+    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, walkSpeed,  retardoAnimacion, creativo=False):
 
         # Primero invocamos al constructor de la clase padre
         MiSprite.__init__(self);
@@ -318,7 +322,7 @@ class Personaje(MiSprite):
                     self.speed=0
                     self.dashes=0
                 elif (self.checarColisionArriba(plataforma)): #arriba
-                    
+                    self.angle=-self.angle-math.pi
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]+self.rect.height-1))
                     
                 elif (self.checarColisionDerecha(plataforma)): #derecha
@@ -459,9 +463,21 @@ class Personaje(MiSprite):
             elif (self.movimiento == ABAJO): 
                 angle=math.pi
                 speed=5
+            elif (self.movimiento == ABAJO_DERECHA): 
+                angle=3*math.pi/4
+                speed=5
+            elif (self.movimiento == ABAJO_IZQUIERDA): 
+                angle=-3*math.pi/4
+                speed=5
+            elif (self.movimiento == ARRIBA_DERECHA): 
+                angle=math.pi/4
+                speed=5
+            elif (self.movimiento == ARRIBA_IZQUIERDA): 
+                angle=-math.pi/4
+                speed=5
             elif (self.movimiento == QUIETO):
                 speed=0               
-        
+            
         
         
         # Además, si estamos en el aire
@@ -523,9 +539,9 @@ class Personaje(MiSprite):
 
 class NoJugador(Personaje):
     "El resto de personajes no jugadores"
-    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion):
+    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad,  retardoAnimacion,creativo):
         # Primero invocamos al constructor de la clase padre con los parametros pasados
-        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion);
+        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad,  retardoAnimacion,creativo);
 
     # Aqui vendria la implementacion de la IA segun las posiciones de los jugadores
     # La implementacion por defecto, este metodo deberia de ser implementado en las clases inferiores
