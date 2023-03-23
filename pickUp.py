@@ -2,10 +2,10 @@ from personajes import *
 POS1=0
 POS2=1
 class PickUp(MiSprite):
-    def __init__(self,archivoImagen, archivoCoordenadas, numImagenes,rectangulo):
+    def __init__(self,archivoImagen, archivoCoordenadas, numImagenes, rectangulo):
         
         MiSprite.__init__(self)
-        self.hoja = GestorRecursos.CargarImagen(archivoImagen,-1)
+        self.hoja = GestorRecursos.CargarImagen(archivoImagen)
         self.hoja = self.hoja.convert_alpha()
         self.cooldown=0
         self.retardoAnimacion=30
@@ -13,21 +13,25 @@ class PickUp(MiSprite):
         # Y lo situamos de forma global en esas coordenadas
         self.establecerPosicion((self.rect.left, self.rect.bottom))
         
-        datos = GestorRecursos.CargarArchivoCoordenadas(archivoCoordenadas)
-        datos = datos.split()
-        self.numPostura = 0;
-        self.numImagenPostura = 0;
-        cont = 0;
-        self.coordenadasHoja = [];
-        for linea in range(0, 2):
-            self.coordenadasHoja.append([])
-            tmp = self.coordenadasHoja[linea]
-            for postura in range(1, numImagenes[linea]+1):
-                tmp.append(pygame.Rect((int(datos[cont]), int(datos[cont+1])), (int(datos[cont+2]), int(datos[cont+3]))))
-                cont += 4
-        
-        self.retardoMovimiento = 0;
-        self.actualizarPostura()
+        if archivoCoordenadas is not None:
+            datos = GestorRecursos.CargarArchivoCoordenadas(archivoCoordenadas)
+            datos = datos.split()
+            self.numPostura = 0;
+            self.numImagenPostura = 0;
+            cont = 0;
+            self.coordenadasHoja = [];
+            for linea in range(0, 2):
+                self.coordenadasHoja.append([])
+                tmp = self.coordenadasHoja[linea]
+                for postura in range(1, numImagenes[linea]+1):
+                    tmp.append(pygame.Rect((int(datos[cont]), int(datos[cont+1])), (int(datos[cont+2]), int(datos[cont+3]))))
+                    cont += 4
+            
+            self.retardoMovimiento = 0;
+            self.actualizarPostura()
+        else:
+            self.image = self.hoja
+            self.rect = self.image.get_rect()
     
     def actualizarPostura(self):
         self.retardoMovimiento -= 1
@@ -51,8 +55,8 @@ class PickUp(MiSprite):
     
 class Beer(PickUp):
     def __init__(self,rectangulo):
-        PickUp.__init__(self,"beer.png", "beerCoord.txt", [8,1],rectangulo)
-    
+        PickUp.__init__(self,"beer.png", "beerCoord.txt", [8,1], rectangulo)
+            
     def checkColisions(self,jugador):
         if pygame.sprite.collide_rect(self,jugador) :
             jugador.dashes+=1
@@ -67,3 +71,16 @@ class Beer(PickUp):
             self.checkColisions(jugador)
         PickUp.update(self,tiempo)
         return   
+    
+class Ladder(PickUp):
+    def __init__(self,rectangulo):
+        PickUp.__init__(self,"ladder1.png", None, None, rectangulo)
+
+    #Si colisiona con el jugador, y se pulsa la flecha arriba, se cambia la escena
+    def checkColisions(self,jugador):
+        if pygame.sprite.collide_rect(self,jugador):
+                print("Cambio de escena EKALERA")
+
+    def update(self,jugador):
+        self.checkColisions(jugador)
+        return

@@ -69,6 +69,7 @@ class Fase(Escena):
         self.grupoSpritesDinamicos = pygame.sprite.Group()
         self.grupoSprites = pygame.sprite.Group()
         self.grupoPickUps=pygame.sprite.Group()
+        self.grupoLadders=pygame.sprite.Group()
         self.rata = Rata()
         self.rata.establecerPosicion((550, 400+ALTO_PANTALLA*2))
         self.grupoEnemigos.add(self.rata)
@@ -112,7 +113,10 @@ class Fase(Escena):
                         cerbeza=Beer(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                         self.grupoPickUps.add(cerbeza)
                         self.grupoSprites.add(cerbeza)
-                    if tile == 16:
+                    if tile == 99:
+                        escalera1=Ladder(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                        self.grupoLadders.add(escalera1)
+                        self.grupoSprites.add(escalera1)
                         pass
                         #salida = Salida()
 
@@ -121,6 +125,7 @@ class Fase(Escena):
 
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
+        self.grupoLadders.update(self.jugador1)
         self.actualizarScroll(self.jugador1)
 
     
