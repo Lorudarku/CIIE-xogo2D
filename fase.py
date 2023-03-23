@@ -62,19 +62,19 @@ class Fase(Escena):
         # Creamos las plataformas del decorado
         # La plataforma que conforma todo el suelo
         #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        cerbeza1=Beer(pygame.Rect(500, 550+ALTO_PANTALLA*2, 6, 16))
+        #cerbeza1=Beer(pygame.Rect(500, 550+ALTO_PANTALLA*2, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
         self.grupoSpritesDinamicos = pygame.sprite.Group( self.jugador1 )
         self.grupoSprites = pygame.sprite.Group(  )
-        self.grupoPickUps=pygame.sprite.Group( cerbeza1 )
+        self.grupoPickUps=pygame.sprite.Group()
         self.rata = Rata()
         self.rata.establecerPosicion((550, 400+ALTO_PANTALLA*2))
         self.grupoEnemigos.add(self.rata)
         self.grupoSpritesDinamicos.add(self.rata)
         self.grupoSprites.add(self.rata)
-        self.grupoSprites.add(cerbeza1)
+        #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
         self.grupoSprites.add(self.jugador1)
         #self.grupoSprites.add(self.rata)
@@ -84,7 +84,6 @@ class Fase(Escena):
        for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
                 if tile >= 0:
-                    #tile_data = ()
                     if (tile >= 0 and tile <= 3) or (tile >= 5 and tile <= 8):
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoPlataformas.add(wall)
@@ -104,9 +103,11 @@ class Fase(Escena):
                         pass
                         
                     if tile == 15:
-                        pass
+                        #pass
                         #item = Item()
-                        #self.grupoItems.add(item)
+                        cerbeza=Beer(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                        self.grupoPickUps.add(cerbeza)
+                        self.grupoSprites.add(cerbeza)
 
     def update(self, tiempo):
         self.rata.mover_cpu(self.grupoPlataformas,self.grupoMuros)
