@@ -103,11 +103,12 @@ class Fase(Escena):
                         pass
                         
                     if tile == 15:
-                        #pass
-                        #item = Item()
                         cerbeza=Beer(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                         self.grupoPickUps.add(cerbeza)
                         self.grupoSprites.add(cerbeza)
+                    if tile == 16:
+                        pass
+                        #salida = Salida()
 
     def update(self, tiempo):
         self.rata.mover_cpu(self.grupoPlataformas,self.grupoMuros)
