@@ -550,8 +550,9 @@ class Personaje(MiSprite):
         
         
         self.add_gravity()
-        self.checkCollisionsPlat(grupoPlataformas)
+        
         self.checkCollisionsWall(grupoMuros)
+        self.checkCollisionsPlat(grupoPlataformas)
         
         self.moveset(grupoPlataformas)
         
