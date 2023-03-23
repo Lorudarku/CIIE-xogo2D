@@ -100,7 +100,7 @@ class Personaje(MiSprite):
         # Se carga la hoja
         self.potaCount=0
         self.dashes=0
-        self.hoja = GestorRecursos.CargarImagen(archivoImagen,-1)
+        self.hoja = GestorRecursos.CargarImagen(archivoImagen)
         self.hoja = self.hoja.convert_alpha()
         # El movimiento que esta realizando
         self.movimiento = QUIETO
@@ -240,6 +240,8 @@ class Personaje(MiSprite):
                 or self.rect.left>plataforma.rect.left<plataforma.rect.right
                 or (plataforma.rect.center[0]<self.rect.bottomleft[0]<plataforma.rect.right and pendienteSelfL>=pendientePlatL)
                 or (plataforma.rect.center[0]>self.rect.bottomright[0]>plataforma.rect.left and pendienteSelfR<=pendientePlatR)
+                )and(
+                    (math.pi/2<self.angle<3*math.pi/2) or (-math.pi/2>self.angle>-3*math.pi/2)
                 ):
             return True
         else:        
@@ -272,6 +274,8 @@ class Personaje(MiSprite):
                 (self.rect.left>plataforma.rect.left and self.rect.right<plataforma.rect.right)
                 or (plataforma.rect.center[0]<self.rect.topleft[0]<plataforma.rect.right and pendienteSelfL>=pendientePlatL)
                 or (plataforma.rect.center[0]>self.rect.topright[0]>plataforma.rect.left and pendienteSelfR<=pendientePlatR)
+                )and(
+                    (-math.pi/2<self.angle<math.pi/2) or (3*math.pi/2>self.angle>5*math.pi/2)
                 ):
             return True
         else:        
@@ -304,7 +308,9 @@ class Personaje(MiSprite):
                 and (plataforma.rect.top <= self.rect.top and self.rect.bottom < plataforma.rect.bottom 
                     or plataforma.rect.center[1] >  self.rect.bottomright[1] > plataforma.rect.top and pendienteSelfL>=pendientePlatL
                     or plataforma.rect.center[1] < self.rect.topright[1] < plataforma.rect.bottom and pendienteSelfR<=pendientePlatR
-                ) 
+                ) and(
+                    (0<self.angle<math.pi) or (-math.pi>self.angle>-2*math.pi)
+                )
                 
             ) :
             return True
@@ -339,6 +345,8 @@ class Personaje(MiSprite):
                 and (plataforma.rect.top <= self.rect.top and self.rect.bottom < plataforma.rect.bottom 
                     or plataforma.rect.center[1] >  self.rect.bottomleft[1] > plataforma.rect.top and pendienteSelfL<=pendientePlatL
                     or plataforma.rect.center[1] < self.rect.topleft[1] < plataforma.rect.bottom and pendienteSelfR>=pendientePlatR
+                )and(
+                    (math.pi<self.angle<2*math.pi) or (0>self.angle>-math.pi)
                 ) 
                 
             ) :
@@ -360,12 +368,12 @@ class Personaje(MiSprite):
                 elif (self.checarColisionArriba(plataforma)): #arriba
                     
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]+self.rect.height-1))
-            
+                    
                 elif (self.checarColisionDerecha(plataforma)): #derecha
                     if self.numPostura==SPRITE_SALTANDO:
                         self.angle=-self.angle
                     else:
-                        self.establecerPosicion(( self.posicion[0]-self.rect.width+1,self.posicion[1]))
+                        self.establecerPosicion(( self.posicion[0]-2,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(plataforma)): #izquierda
                     if self.numPostura==SPRITE_SALTANDO:
@@ -483,7 +491,7 @@ class Personaje(MiSprite):
                             self.mirando = self.movimiento
                             angle,speed=self.saltar("derecha")
                         elif self.movimiento==ESPACIOI:
-                            self.mirando = self.movimiento
+                            self.mirando = IZQUIERDA
                             angle,speed=self.saltar("izquierda")
                         else:
                             angle,speed=self.saltar("arriba")
@@ -494,7 +502,10 @@ class Personaje(MiSprite):
             if self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
                 if not self.numPostura == SPRITE_SALTANDO:
-                    self.numPostura = SPRITE_QUIETO
+                    if self.numPostura == SPRITE_AGACHADO:
+                        angle,speed=self.saltar("arriba")
+                    else:
+                        self.numPostura = SPRITE_QUIETO
 
         else:
             if (self.movimiento == IZQUIERDA):  
@@ -555,7 +566,7 @@ class Personaje(MiSprite):
         self.checkCollisionsPlat(grupoPlataformas)
         
         self.moveset(grupoPlataformas)
-        
+        print(self.angle)
         self.actualizarPostura()
         # print(self.speed)
         
