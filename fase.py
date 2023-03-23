@@ -172,6 +172,7 @@ class Fase(Escena):
 
 class Decorado:
     def __init__(self,backgroundName, size):
+        self.scroll = 0
         self.imagen = GestorRecursos.CargarImagen(backgroundName, -1)
         self.imagen = pygame.transform.scale(self.imagen, ((ANCHO_PANTALLA, ALTO_PANTALLA*size)))
 
@@ -184,8 +185,14 @@ class Decorado:
     def update(self, dir):
         if dir=="up":
             self.rectSubimagen.bottom -= ALTO_PANTALLA
+            self.scroll -= 1
+            print (self.scroll)
         elif dir=="down":
             self.rectSubimagen.bottom += ALTO_PANTALLA
+            self.scroll += 1
+            print (self.scroll)
+        elif dir == "down" and self.scroll > 2 :
+            self.rectSubimagen.bottom = ALTO_PANTALLA
     
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect, self.rectSubimagen)
