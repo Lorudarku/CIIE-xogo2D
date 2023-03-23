@@ -10,8 +10,9 @@ class Rata(NoJugador):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
         NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4, 0,  5);
         self.idlecount=0
-        self.movimiento=IZQUIERDA
-        
+        self.ultimoMovimiento=IZQUIERDA
+        self.idlecooldown=100
+        self.idletimer=50
         
     def cambiarPostura(self):
         if self.estado==ESTADO_ANDANDO:
@@ -19,7 +20,7 @@ class Rata(NoJugador):
             self.idlecount=0
         elif self.estado==ESTADO_QUIETO:
             if self.idlecount==0:
-                self.numPostura = random.choice((SPRITE_QUIETO1,SPRITE_QUIETO1))
+                self.numPostura = random.choice((SPRITE_QUIETO1,SPRITE_QUIETO2))
                 self.idlecount=50
             else: 
                 self.idlecount-=1
@@ -42,14 +43,29 @@ class Rata(NoJugador):
     def mover_cpu(self,grupoPlataformas,grupoMuros):
        
         plataformas = pygame.sprite.spritecollide(self, grupoPlataformas,False)
-        
-        if plataformas.__len__()==1:
+        if self.idlecooldown<=0 :
+                self.idletimer=50
+
+        if self.idletimer>0:
+            Personaje.mover(self,QUIETO)
+            self.idlecooldown=random.randint(50, 1000)
+            self.idletimer-=1
+        else:
+            Personaje.mover(self,self.ultimoMovimiento)
+        self.idlecooldown-=1    
             
+            
+        if plataformas.__len__()==1:
             if self.movimiento==DERECHA and self.rect.right>plataformas[0].rect.right:
                 Personaje.mover(self,IZQUIERDA)
+                self.ultimoMovimiento=IZQUIERDA
             elif self.movimiento==IZQUIERDA and self.rect.left<plataformas[0].rect.left:
                 Personaje.mover(self,DERECHA)
+                self.ultimoMovimiento=DERECHA
         
+        print(self.idlecooldown)
+        print(self.idletimer)
+            
     def actualizarPostura(self):
         self.retardoMovimiento -= 1
         # Miramos si ha pasado el retardo para dibujar una nueva postura
