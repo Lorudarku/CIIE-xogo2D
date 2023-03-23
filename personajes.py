@@ -54,7 +54,7 @@ class MiSprite(pygame.sprite.Sprite):
         self.speed = 0
         self.angle = 0
         
-        self.maxJumpCount = 30
+        self.maxJumpCount = 35
         self.jumpCount=0
         self.physics=Physics()
         self.scroll   = (0, 0)
@@ -114,7 +114,7 @@ class Personaje(MiSprite):
         self.numImagenPostura = 0;
         cont = 0;
         self.coordenadasHoja = [];
-        for linea in range(0, 11):
+        for linea in range(0, numImagenes.__len__()):
             self.coordenadasHoja.append([])
             tmp = self.coordenadasHoja[linea]
             for postura in range(1, numImagenes[linea]+1):
@@ -145,7 +145,7 @@ class Personaje(MiSprite):
   
         
     def saltar(self,direccion):
-        print("salteeeeee")
+        
             
         speed = (1.5 + ((self.jumpCount/5)**1.13))
         if direccion == "arriba":
@@ -202,7 +202,7 @@ class Personaje(MiSprite):
 
         elif direccion==ESPACIOIAB:
             angle= -3*math.pi/4
-            print("YO WOTOFO")
+            
             self.numPostura=SPRITE_POTA_UR
             self.mirando=DERECHA
 
@@ -387,17 +387,17 @@ class Personaje(MiSprite):
         if (muros != None):
             for muro in muros:
                 if (self.checarColisionDerecha(muro)): #derecha
-                    print (":this a derecha?")
-                    if self.numPostura==SPRITE_SALTANDO:
+                    
+                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
                         self.angle=-self.angle
                     else:
                         self.establecerPosicion(( self.posicion[0]-1,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(muro)): #izquierda
-                    if self.numPostura==SPRITE_SALTANDO:
+                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
                         self.angle=-self.angle
                     else:
-                        print (":this a izquierda??")
+                        
                     
                         self.establecerPosicion(( self.posicion[0]+2,self.posicion[1]))
                     
@@ -566,7 +566,7 @@ class Personaje(MiSprite):
         self.checkCollisionsPlat(grupoPlataformas)
         
         self.moveset(grupoPlataformas)
-        print(self.angle)
+        #print(self.angle)
         self.actualizarPostura()
         # print(self.speed)
         
@@ -591,14 +591,14 @@ class Personaje(MiSprite):
 
 class NoJugador(Personaje):
     "El resto de personajes no jugadores"
-    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion):
+    def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion,maxSpeed):
         # Primero invocamos al constructor de la clase padre con los parametros pasados
-        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion);
+        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad, velocidadSalto, retardoAnimacion, maxSpeed);
 
     # Aqui vendria la implementacion de la IA segun las posiciones de los jugadores
     # La implementacion por defecto, este metodo deberia de ser implementado en las clases inferiores
     #  mostrando la personalidad de cada enemigo
-    def mover_cpu(self, jugador1):
+    def mover_cpu(self, grupoPlataformas,grupoMuros):
         # Por defecto un enemigo no hace nada
         #  (se podria programar, por ejemplo, que disparase al jugador por defecto)
         return
