@@ -388,13 +388,13 @@ class Personaje(MiSprite):
             for muro in muros:
                 if (self.checarColisionDerecha(muro)): #derecha
                     
-                    if self.numPostura==SPRITE_SALTANDO:
+                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
                         self.angle=-self.angle
                     else:
                         self.establecerPosicion(( self.posicion[0]-1,self.posicion[1]))
             
                 elif (self.checarColisionIzquierda(muro)): #izquierda
-                    if self.numPostura==SPRITE_SALTANDO:
+                    if self.numPostura in (SPRITE_POTA_D,SPRITE_POTA_DR,SPRITE_POTA_R,SPRITE_POTA_U,SPRITE_POTA_UR, SPRITE_SALTANDO):
                         self.angle=-self.angle
                     else:
                         
