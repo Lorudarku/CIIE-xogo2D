@@ -54,7 +54,7 @@ class MiSprite(pygame.sprite.Sprite):
         self.speed = 0
         self.angle = 0
         
-        self.maxJumpCount = 30
+        self.maxJumpCount = 35
         self.jumpCount=0
         self.physics=Physics()
         self.scroll   = (0, 0)
