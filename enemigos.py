@@ -12,6 +12,7 @@ class Rata(NoJugador):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
         NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4,   5,False)
         self.idlecount=0
+        Personaje.mover(self,IZQUIERDA)
         self.ultimoMovimiento=IZQUIERDA
         self.idlecooldown=100
         self.idletimer=50
@@ -65,8 +66,6 @@ class Rata(NoJugador):
                 Personaje.mover(self,DERECHA)
                 self.ultimoMovimiento=DERECHA
         
-        print(self.idlecooldown)
-        print(self.idletimer)
             
     def actualizarPostura(self):
         self.retardoMovimiento -= 1
@@ -95,8 +94,9 @@ class Rata(NoJugador):
         self.add_gravity()
         
         self.checkCollisionsWall(grupoMuros)
+
         self.checkCollisionsPlat(grupoPlataformas)
-        Personaje.moveset(self,grupoPlataformas)
+        self.moveset(grupoPlataformas)
 
         self.cambiarPostura()
         self.actualizarPostura()
@@ -112,7 +112,7 @@ class Bat(NoJugador):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
         NoJugador.__init__(self,'ratAndBat.png','bat_coord.txt', [10, 10], 1.4,  5, True)
         self.numPostura=SPRITE_QUIETO1
-        self.angle=math.pi/4
+        self.angle=random.uniform(0, 2*math.pi)
         self.speed=3
         self.cooldown=100
         self.flipcount=random.randint(50, 200)
@@ -143,7 +143,6 @@ class Bat(NoJugador):
         if self.rect.left<0 or self.rect.right>ANCHO_PANTALLA or self.rect.bottom>ALTO_PANTALLA or self.rect.top<0:
             self.angle=-self.angle
         if self.rect.bottom>ALTO_PANTALLA or self.rect.top<0:
-            print("aaaaaa")
             self.angle+=math.pi
         self.changeDir()
         
@@ -223,7 +222,6 @@ class WhiteBat(NoJugador):
         if self.rect.left<0 or self.rect.right>ANCHO_PANTALLA or self.rect.bottom>ALTO_PANTALLA or self.rect.top<0:
             self.angle=-self.angle
         if self.rect.bottom>ALTO_PANTALLA or self.rect.top<0:
-            print("aaaaaa")
             self.angle+=math.pi
         self.changeDir(jugador)
         

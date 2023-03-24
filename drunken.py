@@ -1,7 +1,7 @@
 from personajes import *
 
 VELOCIDAD_JUGADOR = 1.4 # Pixeles por milisegundo
-VELOCIDAD_MAXIMA_JUGADOR=15
+VELOCIDAD_MAXIMA_JUGADOR=30
 VELOCIDAD_SALTO_JUGADOR = 0.3 # Pixeles por milisegundo
 RETARDO_ANIMACION_JUGADOR = 5
 
@@ -136,8 +136,8 @@ class Jugador(Personaje):
 
     def update(self, grupoPlataformas, grupoMuros, tiempo):
         self.add_gravity()
-        
         self.checkCollisionsWall(grupoMuros)
+        
         self.checkCollisionsPlat(grupoPlataformas)
         self.movesetDrunken(grupoPlataformas)
 

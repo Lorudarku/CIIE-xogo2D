@@ -96,7 +96,7 @@ class Personaje(MiSprite):
         self.maxJumpCount = 33
         self.jumpCount=0
         self.physics=Physics()
-        self.estado=ESTADO_QUIETO
+        self.estado=ESTADO_AIRE
 
 
         # Se carga la hoja
@@ -314,8 +314,10 @@ class Personaje(MiSprite):
     def checkCollisionsPlat(self,grupoPlataformas):
         plataformas = pygame.sprite.spritecollide(self, grupoPlataformas,False)
         if (plataformas != None):
+            
             for plataforma in plataformas:
                 if (self.checarColisionAbajo(plataforma)): #abajo
+                    print("aqui si")
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
                     if self.estado==ESTADO_AIRE:
                         self.estado=ESTADO_QUIETO
@@ -395,7 +397,6 @@ class Personaje(MiSprite):
                     self.estado=ESTADO_ANDANDO
                     # Ademas, si no estamos encima de ninguna plataforma, caeremos
                     if pygame.sprite.spritecollideany(self, grupoPlataformas) == None:
-                        print(pygame.sprite.spritecollideany(self, grupoPlataformas))
                     
                         self.estado=ESTADO_AIRE  
 

@@ -287,6 +287,8 @@ class PantallaInicialGUI(PantallaGUI):
         GestorRecursos.CargarSonido(canciones[numeroCancion],True)
         pygame.mixer.music.set_volume(round(0.0,1)) #volumen inicial
         pygame.mixer.music.play()
+        
+        
 
         PantallaGUI.__init__(self, menu, 'fondoMenu.png')
         #PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
@@ -360,3 +362,15 @@ class PantallaVictoriaGUI(PantallaGUI):
         # Creamos el texto y lo metemos en la lista
         textoVictoria = VictoriaText(self)
         self.textList.append(textoVictoria)
+
+#pantalla de muerte
+class PantallaMuerteGUI(PantallaGUI):
+    def __init__(self, menu):
+        #Cargamos encima de la pantalla actual el fondo de victoria
+        PantallaGUI.__init__(self, menu, 'youDied.jpg', 'rectangulo-semitransparente.png') #No se carga el fondo del menu por encima
+        # Creamos los botones y los metemos en la lista
+        botonVolverMenu = ReactiveButtonJugar(self)
+        self.elementosGUI.append(botonVolverMenu)
+
+        # Creamos el texto y lo metemos en la lista
+        

@@ -34,7 +34,7 @@ for x in range(TILE_TYPES):
 # -------------------------------------------------
 # Clase Fase
 class Fase(Escena):
-    def __init__(self, director,archivoFase,fasePrevia=None):
+    def __init__(self, director,archivoFase, backgroundName,fasePrevia=None):
         # Habria que pasarle como parámetro el número de fase, a partir del cual se cargue
         #  un fichero donde este la configuracion de esa fase en concreto, con cosas como
         #   - Nombre del archivo con el decorado
@@ -48,11 +48,12 @@ class Fase(Escena):
         Escena.__init__(self, director)
         self.nombreFase=archivoFase
         self.fasePrevia=fasePrevia
+        self.backgroundName=backgroundName
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
         #print(datos)
         # Creamos el decorado y el fondo
         # self.decorado = Decorado(decorado)
-        self.decorado = Decorado('backgroundTest3.png',size=3)
+        self.decorado = Decorado(self.backgroundName,size=3)
         #self.jugador1 = Jugador()
         
         self.grupoJugadores = pygame.sprite.Group()#lo de el grupo que tal que pin que pan, cargar, el trece
@@ -72,6 +73,8 @@ class Fase(Escena):
         self.grupoSprites = pygame.sprite.Group()
         self.grupoPickUps=pygame.sprite.Group()
         self.grupoLadders=pygame.sprite.Group()
+        self.rata = Rata()
+        self.rata.establecerPosicion((170, 350+(ALTO_PANTALLA*2)))
         
         #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
@@ -93,10 +96,11 @@ class Fase(Escena):
                         self.grupoSprites.add(wall)
                     if tile == 9 :
                         rata = Rata()
-                        rata.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
-                        self.grupoEnemigos.add(rata)
-                        self.grupoSpritesDinamicos.add(rata)
-                        self.grupoSprites.add(rata)
+                        self.rata.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
+                        self.grupoSprites.add(self.rata)
+                        self.grupoSpritesDinamicos.add(self.rata)
+                        self.grupoEnemigos.add(self.rata)
+                        
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile ==10:
@@ -147,7 +151,10 @@ class Fase(Escena):
         for enemigo in iter(self.grupoEnemigos):
             enemigo.mover_cpu(self.grupoPlataformas,self.grupoMuros,self.jugador1)
         
-
+        if pygame.sprite.spritecollideany(self.jugador1,self.grupoEnemigos)!=None:
+            fase = PantallaMuerte(self.director)
+            self.director.cambiarEscena(fase)
+                                    
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
         self.grupoLadders.update(self.jugador1)
@@ -178,16 +185,15 @@ class Fase(Escena):
                 #Si es la tecla e
                 if evento.key == K_e:
                     for ladder in self.grupoLadders:
-                        print(ladder.rect)
                         if ladder.checkColisions(self.jugador1):
                             if ladder.rect[1]<200:  #subida
                                 #   f'{tile}.csv'
                                 if self.nombreFase=="nivel1.csv":
                                     # self.director.salirEscena()
-                                    fase = Fase(self.director, "nivel2.csv")
+                                    fase = Fase(self.director, "nivel2.csv","backgroundTest4.png")
                                     self.director.cambiarEscena(fase)
                                 elif self.nombreFase=="nivel2.csv":
-                                    fase = Fase(self.director, "nivel3.csv")
+                                    fase = Fase(self.director, "nivel3.csv","backgroundTest5.png")
                                     self.director.cambiarEscena(fase)
                                 elif self.nombreFase=="nivel3.csv":
                                     fase = PantallaVictoria(self.director)
@@ -195,10 +201,10 @@ class Fase(Escena):
                                     #self.director.salirEscena()
                             else:   #bajada
                                 if self.nombreFase=="nivel3.csv":
-                                    fase = Fase(self.director, "nivel2.csv",1)
+                                    fase = Fase(self.director, "nivel2.csv","backgroundTest4.png",1)
                                     self.director.cambiarEscena(fase)
                                 elif self.nombreFase=="nivel2.csv":
-                                    fase = Fase(self.director, "nivel1.csv",1)
+                                    fase = Fase(self.director, "nivel1.csv","backgroundTest3.png",1)
                                     self.director.cambiarEscena(fase)
                             
 
@@ -213,11 +219,9 @@ class Fase(Escena):
             sprite.establecerPosicion((sprite.posicion[0],sprite.posicion[1]-self.decorado.rectSubimagen.top))
 
         if jugador1.rect.center[1]<0:
-            print("arriba")
             self.decorado.update("up")
             jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]+ALTO_PANTALLA))
         elif jugador1.rect.center[1]>ALTO_PANTALLA:
-            print("abajo")
             self.decorado.update("down")
             jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA))
 
@@ -286,7 +290,7 @@ class Menu(Escena):
         self.director.salirPrograma()
 
     def ejecutarJuego(self):    
-        fase = Fase(self.director, "nivel1.csv")
+        fase = Fase(self.director, "nivel1.csv","backgroundTest3.png")
         self.director.apilarEscena(fase)
 
     def mostrarPantallaOpciones(self, ingame=False):
@@ -430,3 +434,48 @@ class PantallaVictoria(Escena):
             #Creamos una nueva escena y la apilamos
             menu = Menu(self.director)
             self.director.apilarEscena(menu)
+
+
+class PantallaMuerte(Escena):
+    
+        def __init__(self, director):
+            # Llamamos al constructor de la clase padre
+            Escena.__init__(self, director)
+            # Creamos la lista de pantallas
+            self.listaPantallas = []
+            # Creamos las pantallas que vamos a tener
+            #   y las metemos en la lista
+            self.listaPantallas.append(PantallaMuerteGUI(self)) #0
+            # En que pantalla estamos actualmente
+            self.mostrarPantallaMuerte()
+    
+        def update(self, *args):
+            return
+    
+        def eventos(self, lista_eventos):
+            # Se mira si se quiere salir de esta escena
+            for evento in lista_eventos:
+                # Si se quiere salir, se le indica al director 
+                if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
+                    self.director.salirPrograma()
+            # Se pasa la lista de eventos a la pantalla actual
+            self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
+    
+        def dibujar(self, pantalla):
+            self.listaPantallas[self.pantallaActual].dibujar(pantalla)
+    
+        #--------------------------------------
+        # Metodos propios del menu de pausa
+    
+        def salirPrograma(self):
+            self.director.salirPrograma()
+
+        def mostrarPantallaMuerte(self):
+            self.pantallaActual = 0
+
+        def ejecutarJuego(self):
+            #Miramos el tamaño de la pila y desapilamos hasta que quede solo 1 elemento
+            fase = Fase(self.director, "nivel1.csv","backgroundTest3.png")
+            self.director.apilarEscena(fase)
+#Creamos una nueva escena y la apilamos
+            
