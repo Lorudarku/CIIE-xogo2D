@@ -52,7 +52,7 @@ class Fase(Escena):
         #print(datos)
         # Creamos el decorado y el fondo
         # self.decorado = Decorado(decorado)
-        self.decorado = Decorado('backgroundTest2.png',size=3)
+        self.decorado = Decorado('backgroundTest3.png',size=3)
         #self.jugador1 = Jugador()
         
         self.grupoJugadores = pygame.sprite.Group()#lo de el grupo que tal que pin que pan, cargar, el trece
