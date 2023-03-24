@@ -34,7 +34,7 @@ for x in range(TILE_TYPES):
 # -------------------------------------------------
 # Clase Fase
 class Fase(Escena):
-    def __init__(self, director,archivoFase):
+    def __init__(self, director,archivoFase,fasePrevia=None):
         # Habria que pasarle como parámetro el número de fase, a partir del cual se cargue
         #  un fichero donde este la configuracion de esa fase en concreto, con cosas como
         #   - Nombre del archivo con el decorado
@@ -47,6 +47,7 @@ class Fase(Escena):
         # Primero invocamos al constructor de la clase padre
         Escena.__init__(self, director)
         self.nombreFase=archivoFase
+        self.fasePrevia=fasePrevia
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
         #print(datos)
         # Creamos el decorado y el fondo
@@ -100,17 +101,25 @@ class Fase(Escena):
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile == 13:
-                        self.jugador1 = Jugador()
-                        self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
-                        print(x)
-                        print(y)
-                        self.grupoSprites.add(self.jugador1)
-                        self.grupoSpritesDinamicos.add(self.jugador1)
-                        self.grupoJugadores.add(self.jugador1)
-                        #pass
+                        if self.fasePrevia == None:
+                            self.jugador1 = Jugador()
+                            self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
+                            print(x)
+                            print(y)
+                            self.grupoSprites.add(self.jugador1)
+                            self.grupoSpritesDinamicos.add(self.jugador1)
+                            self.grupoJugadores.add(self.jugador1)
+                            #pass
                     if tile == 14:
-                        pass
-                        
+                        if self.fasePrevia != None:
+                            self.jugador1 = Jugador()
+                            self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
+                            print(x)
+                            print(y)
+                            self.grupoSprites.add(self.jugador1)
+                            self.grupoSpritesDinamicos.add(self.jugador1)
+                            self.grupoJugadores.add(self.jugador1)
+                            #pass
                     if tile == 15:
                         cerbeza=Beer(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                         self.grupoPickUps.add(cerbeza)
@@ -155,26 +164,28 @@ class Fase(Escena):
                 #Si es la tecla e
                 if evento.key == K_e:
                     for ladder in self.grupoLadders:
-                        if ladder.rect[0]<100:  #subida
-                            #   f'{tile}.csv'
-                            if self.nombreFase=="nivel1.csv":
-                                self.director.salirEscena()
-                                fase = Fase(self.director, "nivel2.csv")
-                                self.director.cambiarEscena(fase)
-                            elif self.nombreFase=="nivel2.csv":
-                                fase = Fase(self.director, "nivel3.csv")
-                                self.director.cambiarEscena(fase)
-                            elif self.nombreFase=="nivel3.csv":
-                                # fase = PantallaVictoria(self.director, "nivel3.csv")
-                                # self.director.cambiarEscena(fase)
-                                self.director.salirEscena()
-                        else:   #bajada
-                            if self.nombreFase=="nivel3.csv":
-                                fase = Fase(self.director, "nivel2.csv")
-                                self.director.cambiarEscena(fase)
-                            elif self.nombreFase=="nivel2.csv":
-                                fase = Fase(self.director, "nivel1.csv")
-                                self.director.cambiarEscena(fase)
+                        print(ladder.rect)
+                        if ladder.checkColisions(self.jugador1):
+                            if ladder.rect[1]<200:  #subida
+                                #   f'{tile}.csv'
+                                if self.nombreFase=="nivel1.csv":
+                                    # self.director.salirEscena()
+                                    fase = Fase(self.director, "nivel2.csv")
+                                    self.director.cambiarEscena(fase)
+                                elif self.nombreFase=="nivel2.csv":
+                                    fase = Fase(self.director, "nivel3.csv")
+                                    self.director.cambiarEscena(fase)
+                                elif self.nombreFase=="nivel3.csv":
+                                    # fase = PantallaVictoria(self.director, "nivel3.csv")
+                                    # self.director.cambiarEscena(fase)
+                                    self.director.salirEscena()
+                            else:   #bajada
+                                if self.nombreFase=="nivel3.csv":
+                                    fase = Fase(self.director, "nivel2.csv",1)
+                                    self.director.cambiarEscena(fase)
+                                elif self.nombreFase=="nivel2.csv":
+                                    fase = Fase(self.director, "nivel1.csv",1)
+                                    self.director.cambiarEscena(fase)
                             
 
 
@@ -183,6 +194,10 @@ class Fase(Escena):
    
       
     def actualizarScroll(self,jugador1):
+        #Si se cambio el scroll, hay que actualizar las posiciones de los sprites
+        for sprite in self.grupoSprites:
+            sprite.establecerPosicion((sprite.posicion[0],sprite.posicion[1]-self.decorado.rectSubimagen.top))
+
         if jugador1.rect.center[1]<0:
             print("arriba")
             self.decorado.update("up")
@@ -191,10 +206,6 @@ class Fase(Escena):
             print("abajo")
             self.decorado.update("down")
             jugador1.establecerPosicion((jugador1.posicion[0],jugador1.posicion[1]-ALTO_PANTALLA))
-
-        #Si se cambio el scroll, hay que actualizar las posiciones de los sprites
-        for sprite in self.grupoSprites:
-            sprite.establecerPosicion((sprite.posicion[0],sprite.posicion[1]-self.decorado.rectSubimagen.top))
 
         
 
@@ -263,7 +274,6 @@ class Menu(Escena):
         self.director.salirPrograma()
 
     def ejecutarJuego(self):    
-
         fase = Fase(self.director, "nivel1.csv")
         self.director.apilarEscena(fase)
 

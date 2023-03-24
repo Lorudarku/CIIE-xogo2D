@@ -19,7 +19,7 @@ pygame.display.set_caption('Level editor')
 
 #variables
 COLS = 25
-MAX_ROWS = 16
+MAX_ROWS = 16*3
 TILE_SIZE = SCREEN_WIDTH // COLS
 TILE_TYPES = 17
 level = 0
