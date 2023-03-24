@@ -92,7 +92,7 @@ class Personaje(MiSprite):
 
         # Primero invocamos al constructor de la clase padre
         MiSprite.__init__(self)
-        self.creativo=False
+        self.creativo=creativo
         self.maxJumpCount = 33
         self.jumpCount=0
         self.physics=Physics()
