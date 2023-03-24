@@ -115,7 +115,7 @@ while run:
     #save y load
     if save_button.draw(screen):
         #guardar nivel
-        with open(f'niveles/level_data{level}.csv', 'w', newline='') as csvfile:
+        with open(f'niveles/nivel{level}.csv', 'w', newline='') as csvfile:
             write = csv.writer(csvfile, delimiter = ',')
             for row in world_data:
                 write.writerow(row)
@@ -123,7 +123,7 @@ while run:
         #cargar nivel
         #mover el scroll al inicio del nivel
         scroll = 0
-        with open(f'niveles/level_data{level}.csv', newline='') as csvfile:
+        with open(f'niveles/nivel{level}.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter = ',')
             for x, row in enumerate(reader):
                 for y, tile in enumerate(row):
