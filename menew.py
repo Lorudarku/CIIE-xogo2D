@@ -202,6 +202,13 @@ class MedidorMusica(Text):
         self.text = fuente.render(medidor, True, "Orange")
         Text.__init__(self, self.pantalla, self.text, (700,350))
 
+#### Texto plano de la pantalla de victoria ####ç
+class VictoriaText(Text):
+    def __init__(self, pantalla):
+        fuente = GestorRecursos.CargarFuenteTexto("Press-Start-2P.ttf", 80)
+        self.text = fuente.render("¡Victoria!", True, (255,255,255))
+        Text.__init__(self, pantalla, self.text, (600,80))
+
 # -------------------------------------------------
 # Clase PantallaGUI y las distintas pantallas
 
@@ -340,3 +347,16 @@ class PantallaPausaGUI(PantallaGUI):
         self.textList.append(textoOpciones)
         self.textList.append(textoMusica)    
         self.textList.append(medidorMusica)
+
+#Pantalla de victoria
+class PantallaVictoriaGUI(PantallaGUI):
+    def __init__(self, menu):
+        #Cargamos encima de la pantalla actual el fondo de victoria
+        PantallaGUI.__init__(self, menu, 'fondoVictoria.jpg', 'rectangulo-semitransparente.png') #No se carga el fondo del menu por encima
+        # Creamos los botones y los metemos en la lista
+        botonVolverMenu = ReactiveButtonVolverMenu(self)
+        self.elementosGUI.append(botonVolverMenu)
+
+        # Creamos el texto y lo metemos en la lista
+        textoVictoria = VictoriaText(self)
+        self.textList.append(textoVictoria)

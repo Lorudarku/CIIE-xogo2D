@@ -176,9 +176,9 @@ class Fase(Escena):
                                     fase = Fase(self.director, "nivel3.csv")
                                     self.director.cambiarEscena(fase)
                                 elif self.nombreFase=="nivel3.csv":
-                                    # fase = PantallaVictoria(self.director, "nivel3.csv")
-                                    # self.director.cambiarEscena(fase)
-                                    self.director.salirEscena()
+                                    fase = PantallaVictoria(self.director)
+                                    self.director.cambiarEscena(fase)
+                                    #self.director.salirEscena()
                             else:   #bajada
                                 if self.nombreFase=="nivel3.csv":
                                     fase = Fase(self.director, "nivel2.csv",1)
@@ -372,3 +372,49 @@ class MenuPausa(Escena):
                 volumen = 0
             pygame.mixer.music.set_volume(volumen)
             self.listaPantallas[0].textList[2].actualizar(volumen*10)
+
+
+class PantallaVictoria(Escena):
+    
+        def __init__(self, director):
+            # Llamamos al constructor de la clase padre
+            Escena.__init__(self, director)
+            # Creamos la lista de pantallas
+            self.listaPantallas = []
+            # Creamos las pantallas que vamos a tener
+            #   y las metemos en la lista
+            self.listaPantallas.append(PantallaVictoriaGUI(self)) #0
+            # En que pantalla estamos actualmente
+            self.mostrarPantallaVictoria()
+    
+        def update(self, *args):
+            return
+    
+        def eventos(self, lista_eventos):
+            # Se mira si se quiere salir de esta escena
+            for evento in lista_eventos:
+                # Si se quiere salir, se le indica al director 
+                if evento.type == pygame.QUIT: #Si se pulsa la X de la ventana
+                    self.director.salirPrograma()
+            # Se pasa la lista de eventos a la pantalla actual
+            self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
+    
+        def dibujar(self, pantalla):
+            self.listaPantallas[self.pantallaActual].dibujar(pantalla)
+    
+        #--------------------------------------
+        # Metodos propios del menu de pausa
+    
+        def salirPrograma(self):
+            self.director.salirPrograma()
+
+        def mostrarPantallaVictoria(self):
+            self.pantallaActual = 0
+
+        def volverMenu(self):
+            #Miramos el tamaño de la pila y desapilamos hasta que quede solo 1 elemento
+            while len(self.director.pila) > 0:    
+                self.director.salirEscena()
+            #Creamos una nueva escena y la apilamos
+            menu = Menu(self.director)
+            self.director.apilarEscena(menu)
