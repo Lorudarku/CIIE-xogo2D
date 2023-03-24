@@ -1,4 +1,4 @@
-# CIIE_xogo_2D
+# CIIE_xogo_2D_Drunken_Jumper
 
 Para jugar ejecutar el main.py
 
