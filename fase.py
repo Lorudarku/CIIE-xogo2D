@@ -72,12 +72,7 @@ class Fase(Escena):
         self.grupoSprites = pygame.sprite.Group()
         self.grupoPickUps=pygame.sprite.Group()
         self.grupoLadders=pygame.sprite.Group()
-        self.rata = Rata()
-        self.bat=WhiteBat()
-        self.bat.establecerPosicion((550, 400+ALTO_PANTALLA*2))
-        self.grupoEnemigos.add(self.bat)
-        self.grupoSpritesDinamicos.add(self.bat)
-        self.grupoSprites.add(self.bat)
+        
         #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
         #self.grupoSprites.add(self.jugador1)
@@ -96,8 +91,29 @@ class Fase(Escena):
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoMuros.add(wall)
                         self.grupoSprites.add(wall)
-                    if tile >= 9 and tile <= 12:
-                        pass
+                    if tile == 9 :
+                        rata = Rata()
+                        rata.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
+                        self.grupoEnemigos.add(rata)
+                        self.grupoSpritesDinamicos.add(rata)
+                        self.grupoSprites.add(rata)
+                        #decoracion = Decorado(f'{tile}.png') #tile_data)
+                        #self.grupoDecorado.add(decoracion)
+                    if tile ==10:
+                        bat=Bat()
+                        bat.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
+                        self.grupoEnemigos.add(bat)
+                        self.grupoSpritesDinamicos.add(bat)
+                        self.grupoSprites.add(bat)
+                        #decoracion = Decorado(f'{tile}.png') #tile_data)
+                        #self.grupoDecorado.add(decoracion)
+                    if tile >= 11 and tile <= 12:
+                        whiteBat=WhiteBat()
+                        whiteBat.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
+                        self.grupoEnemigos.add(whiteBat)
+                        self.grupoSpritesDinamicos.add(whiteBat)
+                        self.grupoSprites.add(whiteBat)
+                        
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile == 13:
