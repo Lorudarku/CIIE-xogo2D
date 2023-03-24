@@ -73,7 +73,7 @@ class Fase(Escena):
         self.grupoPickUps=pygame.sprite.Group()
         self.grupoLadders=pygame.sprite.Group()
         self.rata = Rata()
-        self.bat=Bat()
+        self.bat=WhiteBat()
         self.bat.establecerPosicion((550, 400+ALTO_PANTALLA*2))
         self.grupoEnemigos.add(self.bat)
         self.grupoSpritesDinamicos.add(self.bat)
@@ -128,7 +128,7 @@ class Fase(Escena):
                         #salida = Salida()
 
     def update(self, tiempo):
-        self.bat.mover_cpu(self.grupoPlataformas,self.grupoMuros)
+        self.bat.mover_cpu(self.grupoPlataformas,self.grupoMuros,self.jugador1)
 
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
