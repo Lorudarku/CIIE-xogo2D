@@ -8,7 +8,7 @@ class Rata(NoJugador):
     "El enemigo 'Sniper'"
     def __init__(self):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
-        NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4,   5,False);
+        NoJugador.__init__(self,'ratAndBat.png','rat_coord.txt', [10, 10, 10], 1.4,   5,False)
         self.idlecount=0
         self.ultimoMovimiento=IZQUIERDA
         self.idlecooldown=100
@@ -74,7 +74,7 @@ class Rata(NoJugador):
             # Si ha pasado, actualizamos la postura
             self.numImagenPostura += 1
             if self.numImagenPostura >= len(self.coordenadasHoja[self.numPostura]):
-                self.numImagenPostura = 0;
+                self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
             self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
@@ -109,7 +109,7 @@ class Bat(NoJugador):
     "El enemigo 'Sniper'"
     def __init__(self):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
-        NoJugador.__init__(self,'ratAndBat.png','bat_coord.txt', [10, 10], 1.4,  5, True);
+        NoJugador.__init__(self,'ratAndBat.png','bat_coord.txt', [10, 10], 1.4,  5, True)
         self.numPostura=SPRITE_QUIETO1
         self.angle=math.pi/4
         self.speed=3
@@ -135,7 +135,7 @@ class Bat(NoJugador):
             # Si ha pasado, actualizamos la postura
             self.numImagenPostura += 1
             if self.numImagenPostura >= len(self.coordenadasHoja[self.numPostura]):
-                self.numImagenPostura = 0;
+                self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
             self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])

@@ -61,11 +61,11 @@ class MiSprite(pygame.sprite.Sprite):
         self.rect.bottom = self.posicion[1] 
 
     def establecerPosicionPantalla(self, scrollDecorado):
-        self.scroll = scrollDecorado;
-        (scrollx, scrolly) = self.scroll;
-        (posx, posy) = self.posicion;
-        self.rect.left = posx - scrollx;
-        self.rect.bottom = posy - scrolly;
+        self.scroll = scrollDecorado
+        (scrollx, scrolly) = self.scroll
+        (posx, posy) = self.posicion
+        self.rect.left = posx - scrollx
+        self.rect.bottom = posy - scrolly
 
     def incrementarPosicion(self, incremento):
         (posx, posy) = self.posicion
@@ -91,7 +91,7 @@ class Personaje(MiSprite):
     def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, walkSpeed,  retardoAnimacion, creativo=False):
 
         # Primero invocamos al constructor de la clase padre
-        MiSprite.__init__(self);
+        MiSprite.__init__(self)
         self.creativo=False
         self.maxJumpCount = 33
         self.jumpCount=0
@@ -112,10 +112,10 @@ class Personaje(MiSprite):
         # Leemos las coordenadas de un archivo de texto
         datos = GestorRecursos.CargarArchivoCoordenadas(archivoCoordenadas)
         datos = datos.split()
-        self.numPostura = 1;
-        self.numImagenPostura = 0;
-        cont = 0;
-        self.coordenadasHoja = [];
+        self.numPostura = 1
+        self.numImagenPostura = 0
+        cont = 0
+        self.coordenadasHoja = []
         for linea in range(0, numImagenes.__len__()):
             self.coordenadasHoja.append([])
             tmp = self.coordenadasHoja[linea]
@@ -124,7 +124,7 @@ class Personaje(MiSprite):
                 cont += 4
 
         # El retardo a la hora de cambiar la imagen del Sprite (para que no se mueva demasiado rápido)
-        self.retardoMovimiento = 0;
+        self.retardoMovimiento = 0
 
         # En que postura esta inicialmente
         self.estado = ESTADO_QUIETO
@@ -498,7 +498,7 @@ class Personaje(MiSprite):
             # Si ha pasado, actualizamos la postura
             self.numImagenPostura += 1
             if self.numImagenPostura >= len(self.coordenadasHoja[self.numPostura]):
-                self.numImagenPostura = 0;
+                self.numImagenPostura = 0
             if self.numImagenPostura < 0:
                 self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
             self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
@@ -541,7 +541,7 @@ class NoJugador(Personaje):
     "El resto de personajes no jugadores"
     def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad,  retardoAnimacion,creativo):
         # Primero invocamos al constructor de la clase padre con los parametros pasados
-        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad,  retardoAnimacion,creativo);
+        Personaje.__init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidad,  retardoAnimacion,creativo)
 
     # Aqui vendria la implementacion de la IA segun las posiciones de los jugadores
     # La implementacion por defecto, este metodo deberia de ser implementado en las clases inferiores

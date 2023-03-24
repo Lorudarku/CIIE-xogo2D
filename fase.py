@@ -104,8 +104,6 @@ class Fase(Escena):
                         if self.fasePrevia == None:
                             self.jugador1 = Jugador()
                             self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
-                            print(x)
-                            print(y)
                             self.grupoSprites.add(self.jugador1)
                             self.grupoSpritesDinamicos.add(self.jugador1)
                             self.grupoJugadores.add(self.jugador1)
@@ -114,8 +112,6 @@ class Fase(Escena):
                         if self.fasePrevia != None:
                             self.jugador1 = Jugador()
                             self.jugador1.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE-(ALTO_PANTALLA*2)))
-                            print(x)
-                            print(y)
                             self.grupoSprites.add(self.jugador1)
                             self.grupoSpritesDinamicos.add(self.jugador1)
                             self.grupoJugadores.add(self.jugador1)
@@ -225,11 +221,9 @@ class Decorado:
         if dir=="up":
             self.rectSubimagen.bottom -= ALTO_PANTALLA
             self.scroll -= 1
-            print (self.scroll)
         elif dir=="down":
             self.rectSubimagen.bottom += ALTO_PANTALLA
             self.scroll += 1
-            print (self.scroll)
         elif dir == "down" and self.scroll > 2 :
             self.rectSubimagen.bottom = ALTO_PANTALLA
     
