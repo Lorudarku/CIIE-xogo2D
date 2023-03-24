@@ -79,7 +79,9 @@ class Fase(Escena):
         #self.grupoSprites.add(cerbeza1)
         self.procesar_datos(datos)
         #self.grupoSprites.add(self.jugador1)
-        #self.grupoSprites.add(self.rata)
+        self.grupoSprites.add(self.rata)
+        self.grupoSpritesDinamicos.add(self.rata)
+        self.grupoEnemigos.add(self.rata)
         
         
     def procesar_datos(self, datos):
@@ -152,8 +154,7 @@ class Fase(Escena):
             enemigo.mover_cpu(self.grupoPlataformas,self.grupoMuros,self.jugador1)
         
         if pygame.sprite.spritecollideany(self.jugador1,self.grupoEnemigos)!=None:
-            fase = PantallaMuerte(self.director)
-            self.director.cambiarEscena(fase)
+            self.jugador1.speed=0
                                     
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
