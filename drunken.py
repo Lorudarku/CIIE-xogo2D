@@ -126,7 +126,7 @@ class Jugador(Personaje):
                     self.estado=ESTADO_QUIETO
         elif self.estado==ESTADO_AIRE:
                 # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
-                if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIODAB,ESPACIOIAB) and self.dashes>0:
+                if self.movimiento in (ESPACIOD,ESPACIOI,ESPACIOAB,ESPACIOAR,ESPACIODAR,ESPACIODAB,ESPACIOIAR,ESPACIOIAB) and self.dashes>0:
                     self.angle,self.speed=self.dash(self.movimiento)
                     self.potaCount=40
                     self.pota=True
