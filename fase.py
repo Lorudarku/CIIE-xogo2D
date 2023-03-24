@@ -100,7 +100,7 @@ class Fase(Escena):
                         #decoracion = Decorado(f'{tile}.png') #tile_data)
                         #self.grupoDecorado.add(decoracion)
                     if tile ==10:
-                        bat=Bat()
+                        bat = Bat()
                         bat.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
                         self.grupoEnemigos.add(bat)
                         self.grupoSpritesDinamicos.add(bat)
@@ -144,7 +144,9 @@ class Fase(Escena):
                         #salida = Salida()
 
     def update(self, tiempo):
-        self.bat.mover_cpu(self.grupoPlataformas,self.grupoMuros,self.jugador1)
+        for enemigo in iter(self.grupoEnemigos):
+            enemigo.mover_cpu(self.grupoPlataformas,self.grupoMuros,self.jugador1)
+        
 
         self.grupoSpritesDinamicos.update(self.grupoPlataformas, self.grupoMuros, tiempo)
         self.grupoPickUps.update(self.jugador1,tiempo)
