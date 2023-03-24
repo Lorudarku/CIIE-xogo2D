@@ -291,7 +291,6 @@ class PantallaInicialGUI(PantallaGUI):
         
 
         PantallaGUI.__init__(self, menu, 'fondoMenu.png')
-        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif')
         # Creamos los botones y los metemos en la lista
         botonJugar = ReactiveButtonJugar(self)
         botonOpciones = ReactiveButtonOpciones(self)
@@ -308,8 +307,6 @@ class PantallaOpcionesGUI(PantallaGUI):
     def __init__(self, menu):
         #Cargamos encima de la pantalla actual el fondo de opciones
         PantallaGUI.__init__(self, menu, 'fondoMenu.png', 'rectangulo-semitransparente.png') #Se carga el fondo del menu y despues el rectangulo semitransparente
-        #PantallaGUI.__init__(self, menu, 'fondoMenu.gif', 'rectangulo-semitransparente.png')
-        
 
         # Creamos los botones y los metemos en la lista
         botonVolver = ReactiveButtonVolver(self, False)

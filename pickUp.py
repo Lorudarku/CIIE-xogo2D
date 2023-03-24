@@ -79,7 +79,6 @@ class Ladder(PickUp):
     #Si colisiona con el jugador, y se pulsa la flecha arriba, se cambia la escena
     def checkColisions(self,jugador):
         return pygame.sprite.collide_rect(self,jugador)
-                # print("Cambio de escena EKALERA")
 
     def update(self,jugador):
         self.checkColisions(jugador)

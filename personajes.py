@@ -44,14 +44,13 @@ GRAVEDAD = 0.0003 # Píxeles / ms2
 
 
 class MiSprite(pygame.sprite.Sprite):
-    "Los Sprites que tendra este juego"
+    # "Los Sprites que tendra este juego"
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.posicion = (0, 0)
 
         self.speed = 0
         self.angle = 0
-        
         
         self.scroll   = (0, 0)
 
@@ -317,7 +316,6 @@ class Personaje(MiSprite):
             
             for plataforma in plataformas:
                 if (self.checarColisionAbajo(plataforma)): #abajo
-                    print("aqui si")
                     self.establecerPosicion((self.posicion[0], plataforma.posicion[1]-plataforma.rect.height+1))
                     if self.estado==ESTADO_AIRE:
                         self.estado=ESTADO_QUIETO
@@ -372,10 +370,6 @@ class Personaje(MiSprite):
         # Miramos a ver si hay que parar de caer: si hemos llegado a una plataforma
         #  Para ello, miramos si hay colision con alguna plataforma del grupo
         
-        #plataforma = pygame.sprite.spritecollide(self, grupoPlataformas)
-        
-        
-
         if self.creativo!=True:
             
             # Si vamos a la izquierda o a la derecha        
@@ -422,7 +416,6 @@ class Personaje(MiSprite):
                         self.estado=ESTADO_AIRE  
 
             # Si queremos saltar
-            #elif self.movimiento == ESPACIO or self.movimiento == ESPACIOD or self.movimiento == ESPACIOI:
             elif self.movimiento in (ESPACIO,ESPACIOD,ESPACIOI):
                 self.jumpCount += 1
             
@@ -440,8 +433,6 @@ class Personaje(MiSprite):
                     else:
                         angle,speed=self.saltar("arriba")
                 
-                
-            
                 # Si no se ha pulsado ninguna tecla
             if self.movimiento == QUIETO:
             # Si no estamos saltando, la postura actual será estar quieto
@@ -478,17 +469,10 @@ class Personaje(MiSprite):
                 speed=5
             elif (self.movimiento == QUIETO):
                 speed=0               
-            
-        
-        
-        # Además, si estamos en el aire
-        #if self.numPostura == SPRITE_SALTANDO:
-        
         
         self.angle=angle
-        
         self.speed=speed
-            # Si no caemos en una plataforma, aplicamos el efecto de la gravedad
+        # Si no caemos en una plataforma, aplicamos el efecto de la gravedad
 
 
     def actualizarPostura(self):
@@ -516,10 +500,6 @@ class Personaje(MiSprite):
     def update(self, grupoPlataformas,grupoMuros, tiempo):
         
         #El update lo hacen las subcalses
-
-
-        # print(self.speed)
-        
         
         
         # Y llamamos al método de la superclase para que, según la velocidad y el tiempo

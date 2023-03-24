@@ -3,8 +3,6 @@ import pygame
 
 ANCHO_PANTALLA = 1200
 ALTO_PANTALLA = 720
-#ANCHO_PANTALLA = 1200
-#ALTO_PANTALLA = ANCHO_PANTALLA/1.67
 COLUMNAS = 25
 FILAS = 16
 TILE_SIZE = ANCHO_PANTALLA // COLUMNAS
@@ -17,8 +15,7 @@ class Escena:
 
     def __init__(self, director):
         self.director = director
- #   si solo vamos a tener escenas de pygame se inicializa aqui la biblioteca
-        # pygame.init()
+
 
     def update(self, *args):
         raise NotImplemented("Tiene que implementar el metodo update.")

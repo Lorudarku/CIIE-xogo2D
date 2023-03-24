@@ -50,22 +50,12 @@ class Fase(Escena):
         self.fasePrevia=fasePrevia
         self.backgroundName=backgroundName
         datos = GestorRecursos.CargarArchivoFase(archivoFase)
-        #print(datos)
-        # Creamos el decorado y el fondo
-        # self.decorado = Decorado(decorado)
+        # Creamos el decorado (fondo)
         self.decorado = Decorado(self.backgroundName,size=3)
-        #self.jugador1 = Jugador()
         
-        self.grupoJugadores = pygame.sprite.Group()#lo de el grupo que tal que pin que pan, cargar, el trece
+        
+        # Creamos los diferente grupos de sprites
         self.grupoJugadores = pygame.sprite.Group()
-        # Ponemos a los jugadores en sus posiciones iniciales
-        #self.jugador1.establecerPosicion((550, 550))
-        
-        
-        # Creamos las plataformas del decorado
-        # La plataforma que conforma todo el suelo
-        #plataformaSuelo = Plataforma(pygame.Rect(0, 550, 1200, 15))
-        #cerbeza1=Beer(pygame.Rect(500, 550+ALTO_PANTALLA*2, 6, 16))
         self.grupoPlataformas = pygame.sprite.Group()
         self.grupoEnemigos = pygame.sprite.Group()
         self.grupoMuros = pygame.sprite.Group()
@@ -73,18 +63,24 @@ class Fase(Escena):
         self.grupoSprites = pygame.sprite.Group()
         self.grupoPickUps=pygame.sprite.Group()
         self.grupoLadders=pygame.sprite.Group()
+        
+        # Procesa el dsv correspondiente creando y colocando los elementos
+        # Tambien añade estos elementos a los grupos correspondientes
+        self.procesar_datos(datos)
+
+        # Inicialización, colocación y adesión a grupos de el enemigo Rata
+        # Esta fuera del procesado de datos por bugs no resueltos a la hora de llevarlo a cabo
+        # al estar aqui aparece en todas las fases en la misma posicion
         self.rata = Rata()
         self.rata.establecerPosicion((170, 350+(ALTO_PANTALLA*2)))
-        
-        #self.grupoSprites.add(cerbeza1)
-        self.procesar_datos(datos)
-        #self.grupoSprites.add(self.jugador1)
         self.grupoSprites.add(self.rata)
         self.grupoSpritesDinamicos.add(self.rata)
         self.grupoEnemigos.add(self.rata)
         
         
     def procesar_datos(self, datos):
+       # Recorre la matriz creada a partir del csv creando los elementos 
+       # posicionandolos y añadiendolos a los grupos de sprites correspondientes
        for y, fila in enumerate(datos):
           for x, tile in enumerate(fila):
                 if tile >= 0:
@@ -92,36 +88,34 @@ class Fase(Escena):
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoPlataformas.add(wall)
                         self.grupoSprites.add(wall)
+
                     if tile == 4:
                         wall = Plataforma(x * TILE_SIZE, y * TILE_SIZE, f'{tile}.png')
                         self.grupoMuros.add(wall)
                         self.grupoSprites.add(wall)
-                    if tile == 9 :
+
+                    if tile == 9 : 
+                        # No existe ningún 9 en los niveles por el bug anteriormente mencionado
                         rata = Rata()
                         self.rata.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
                         self.grupoSprites.add(self.rata)
                         self.grupoSpritesDinamicos.add(self.rata)
                         self.grupoEnemigos.add(self.rata)
-                        
-                        #decoracion = Decorado(f'{tile}.png') #tile_data)
-                        #self.grupoDecorado.add(decoracion)
+
                     if tile ==10:
                         bat = Bat()
                         bat.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
                         self.grupoEnemigos.add(bat)
                         self.grupoSpritesDinamicos.add(bat)
                         self.grupoSprites.add(bat)
-                        #decoracion = Decorado(f'{tile}.png') #tile_data)
-                        #self.grupoDecorado.add(decoracion)
+
                     if tile >= 11 and tile <= 12:
                         whiteBat=WhiteBat()
                         whiteBat.establecerPosicion((x * TILE_SIZE, y * TILE_SIZE))
                         self.grupoEnemigos.add(whiteBat)
                         self.grupoSpritesDinamicos.add(whiteBat)
                         self.grupoSprites.add(whiteBat)
-                        
-                        #decoracion = Decorado(f'{tile}.png') #tile_data)
-                        #self.grupoDecorado.add(decoracion)
+
                     if tile == 13:
                         if self.fasePrevia == None:
                             self.jugador1 = Jugador()
@@ -129,7 +123,7 @@ class Fase(Escena):
                             self.grupoSprites.add(self.jugador1)
                             self.grupoSpritesDinamicos.add(self.jugador1)
                             self.grupoJugadores.add(self.jugador1)
-                            #pass
+
                     if tile == 14:
                         if self.fasePrevia != None:
                             self.jugador1 = Jugador()
@@ -137,17 +131,18 @@ class Fase(Escena):
                             self.grupoSprites.add(self.jugador1)
                             self.grupoSpritesDinamicos.add(self.jugador1)
                             self.grupoJugadores.add(self.jugador1)
-                            #pass
+
                     if tile == 15:
                         cerbeza=Beer(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                         self.grupoPickUps.add(cerbeza)
                         self.grupoSprites.add(cerbeza)
+
                     if tile == 99:
                         escalera1=Ladder(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                         self.grupoLadders.add(escalera1)
                         self.grupoSprites.add(escalera1)
                         pass
-                        #salida = Salida()
+
 
     def update(self, tiempo):
         for enemigo in iter(self.grupoEnemigos):
@@ -165,11 +160,11 @@ class Fase(Escena):
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.decorado.dibujar(pantalla)
-        # self.grupoPlataformas.draw(pantalla)
         # Luego los Sprites
         self.grupoSprites.draw(pantalla)
+        # Por último los personajes para evitar que se "escondan" por debajo de plataformas
         self.grupoSpritesDinamicos.draw(pantalla)
-        # self.grupoPickUps.draw(pantalla)
+
     
     def eventos(self, lista_eventos):
         # Miramos a ver si hay algun evento de salir del programa
@@ -186,11 +181,11 @@ class Fase(Escena):
                 #Si es la tecla e
                 if evento.key == K_e:
                     for ladder in self.grupoLadders:
+                        # en colisión con alguna escalera
+                        # se hace el cambio de fase correspondiente
                         if ladder.checkColisions(self.jugador1):
                             if ladder.rect[1]<200:  #subida
-                                #   f'{tile}.csv'
                                 if self.nombreFase=="nivel1.csv":
-                                    # self.director.salirEscena()
                                     fase = Fase(self.director, "nivel2.csv","backgroundTest4.png")
                                     self.director.cambiarEscena(fase)
                                 elif self.nombreFase=="nivel2.csv":
@@ -199,7 +194,6 @@ class Fase(Escena):
                                 elif self.nombreFase=="nivel3.csv":
                                     fase = PantallaVictoria(self.director)
                                     self.director.cambiarEscena(fase)
-                                    #self.director.salirEscena()
                             else:   #bajada
                                 if self.nombreFase=="nivel3.csv":
                                     fase = Fase(self.director, "nivel2.csv","backgroundTest4.png",1)
@@ -207,8 +201,6 @@ class Fase(Escena):
                                 elif self.nombreFase=="nivel2.csv":
                                     fase = Fase(self.director, "nivel1.csv","backgroundTest3.png",1)
                                     self.director.cambiarEscena(fase)
-                            
-
 
         teclasPulsadas = pygame.key.get_pressed()
         self.jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
@@ -475,8 +467,8 @@ class PantallaMuerte(Escena):
             self.pantallaActual = 0
 
         def ejecutarJuego(self):
-            #Miramos el tamaño de la pila y desapilamos hasta que quede solo 1 elemento
+            #Creamos una nueva escena y la apilamos
             fase = Fase(self.director, "nivel1.csv","backgroundTest3.png")
             self.director.apilarEscena(fase)
-#Creamos una nueva escena y la apilamos
+
             

@@ -17,6 +17,4 @@ class Plataforma(MiSprite):
         self.image = GestorRecursos.CargarImagen(skin, -1)
         self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
         self.rect = self.image.get_rect()
-        #self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
         self.establecerPosicion((x, y))
-        #pygame.Surface.blit(self.imagen,cubo,(0, 550))

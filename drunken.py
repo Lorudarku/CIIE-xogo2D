@@ -22,7 +22,6 @@ class Jugador(Personaje):
     def __init__(self):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
         Personaje.__init__(self,'drunkSpriteSheetMid.png','drunkCoord.txt', [2, 3, 1, 3, 3, 1, 3, 3, 3, 3, 3], VELOCIDAD_JUGADOR,  RETARDO_ANIMACION_JUGADOR);
-        #Personaje.__init__(self,'Jugador.png','coordJugador.txt', [6, 12, 6], VELOCIDAD_JUGADOR, VELOCIDAD_SALTO_JUGADOR, RETARDO_ANIMACION_JUGADOR);
         self.potaCount=0
         self.pota=False
         

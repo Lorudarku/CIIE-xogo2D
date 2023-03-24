@@ -15,10 +15,10 @@ ROWS = 46
 class GestorRecursos(object):
     recursos = {}
 
+    # Por cuestiones de control de versiones la animación del menú de inicio
+    # No se usa, ya que la mayoria usamos python3.10 para la cula no esta disponible aún
     @classmethod
     def CargarAnimacion(cls, nombre, colorkey=None):
-        #gifMenu = pyganim.PygAnimation('Menu/fondoMenu.gif')
-        #gifMenu.play()
         #Si el nombre de archivo está entre los recursos ya cargados
         if nombre in cls.recursos:
             #Se devuelve ese recurso
@@ -56,9 +56,6 @@ class GestorRecursos(object):
             except pygame.error:
                 print ('Cannot load image:', fullname)
                 raise SystemExit
-            # Para evitar convertir la transparencia
-            #if (nombre!="rectangulo-semitransparente.png"):
-            #    imagen = imagen.convert()
                 
             if colorkey is not None:
                 if colorkey == -1:
@@ -87,9 +84,10 @@ class GestorRecursos(object):
             # Se devuelve
             return datos
 
-##################### YO! PREGUNTA AL PRFE SI GESTIONAR ESTE RECURSO #############################################################
+
     @classmethod
-    def CargarFuenteTexto(cls,nombre,size): #Devuelve Press-Start-2P en el tamaño que le indiquemos     
+    def CargarFuenteTexto(cls,nombre,size): 
+        #Devuelve Press-Start-2P en el tamaño que le indiquemos
         fullname = os.path.join('imagenes', nombre)
         return pygame.font.Font(fullname, size)
     
